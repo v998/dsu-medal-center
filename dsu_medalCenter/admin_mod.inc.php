@@ -1,6 +1,6 @@
 <?php
 /*
-	dsu_medalCenter (C)2009 Discuz Student Union
+	dsu_medalCenter (C)2010 Discuz Student Union
 	This is NOT a freeware, use is subject to license terms
 
 	$Id$
