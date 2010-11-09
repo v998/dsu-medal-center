@@ -127,7 +127,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
    			include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php';
    			if(class_exists($classname)){
    				$newclass = new $classname;
-   				$newclass->admincp_show();
+   				if(method_exists($newclass, 'admincp_show')) $newclass->admincp_show();
    			}
 		}
 		showtableheader('', 'notop');
@@ -135,17 +135,14 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 		showtablefooter();
 		showformfooter();
 	} else {
-		$dir = dir(DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/');
-		while (false !== ($entry = $dir->read())) {
-   			if(substr($entry, 0, 7) != 'script_' || substr($entry, -4) != '.php') continue;
-   			include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$entry;
-   			$classname = substr($entry, 0, -4);
+		$modlist = array_keys($cvars['modlist']);
+		foreach($modlist as $classname){
+   			include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php';
    			if(class_exists($classname)){
    				$newclass = new $classname;
-   				$newclass->admincp_check();
+   				if(method_exists($newclass, 'admincp_check')) $newclass->admincp_check();
    			}
 		}
-		$dir->close();
 
 
 		DB::update('forum_medal', array(
