@@ -56,7 +56,8 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 		$classname = substr($entry, 0, -4);
 		if(class_exists($classname)){
 			$newclass = new $classname;
-			$adminaction = $versionmsg = '';
+			if(empty($newclass->name)) continue;
+			$adminaction = $namemsg = $versionmsg = '';
 			$namemsg = $newclass->name;
 			$versionmsg = $newclass->version;
 			if(isset($modlist[$classname])){

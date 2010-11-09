@@ -5,7 +5,7 @@
 
 	$Id$
 */
-class script_usergroup extends script_base {
+class script_usergroup {
 	
 	var $name = '用户组限制模块';
 	var $version = '1.0';

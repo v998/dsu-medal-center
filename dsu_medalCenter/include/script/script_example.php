@@ -5,7 +5,7 @@
 
 	$Id$
 */
-class script_base{
+class script_example{
 	
 	var $name = '范例程序'; //扩展脚本名
 	var $version = '1.0'; //扩展脚本版本号
