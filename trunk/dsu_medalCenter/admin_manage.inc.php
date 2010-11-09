@@ -6,7 +6,12 @@
 	$Id$
 */
 (!defined('IN_DISCUZ') || !defined('IN_DISCUZ')) && exit('Access Denied');
-if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){
+
+loadcache('plugin');
+$cvars = &$_G['cache']['plugin']['dsu_medalCenter'];
+$cvars['modlist'] = is_array($cvars['modlist']) ? $cvars['modlist'] : (array)unserialize($cvars['modlist']);
+
+if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 	if(!submitcheck('medalsubmit')) {
 		showtips('medals_tips');
 		showformheader('medals');
@@ -93,9 +98,9 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){
 
 		updatecache('setting');
 		updatecache('medals');
-		cpmsg('medals_succeed', 'action=medals', 'succeed');
+		cpmsg('medals_succeed', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage', 'succeed');
 	}
-}elseif($_G['gp_pdo'] == 'edit'){
+}elseif($_G['gp_pdo'] == 'edit'){ //勋章编辑页面
 	
 	$medalid = intval($_G['gp_medalid']);
 
@@ -117,17 +122,14 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){
 		showsetting('medals_expr1', 'expirationnew', $medal['expiration'], 'text');
 		showsetting('medals_memo', 'descriptionnew', $medal['description'], 'text');
 		showtablefooter();
-		$dir = dir(DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/');
-		while (false !== ($entry = $dir->read())) {
-   			if(substr($entry, 0, 7) != 'script_' || substr($entry, -4) != '.php') continue;
-   			include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$entry;
-   			$classname = substr($entry, 0, -4);
+		$modlist = array_keys($cvars['modlist']);
+		foreach($modlist as $classname){
+   			include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php';
    			if(class_exists($classname)){
    				$newclass = new $classname;
    				$newclass->admincp_show();
    			}
 		}
-		$dir->close();
 		showtableheader('', 'notop');
 		showsubmit('medaleditsubmit');
 		showtablefooter();

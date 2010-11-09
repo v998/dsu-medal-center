@@ -5,7 +5,12 @@
 
 	$Id$
 */
-class script_dzperm extends script_base {
+class script_dzperm{
+
+	var $name = '积分限制模块';
+	var $version = '1.0';
+	var $copyright = '<a href="www.dsu.cc">DSU Team</a>';
+	
 	function admincp_show(){
 		global $_G, $lang, $medal;
 		$medal['permission'] = unserialize($medal['permission']);$medal['permission'] = $medal['permission'][0];
