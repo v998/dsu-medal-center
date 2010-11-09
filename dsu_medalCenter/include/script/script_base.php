@@ -7,6 +7,8 @@
 */
 class script_base{
 	
+	var $name = '范例程序'; //扩展脚本名
+	var $version = '1.0'; //扩展脚本版本号
 	var $copyright = '<a href="www.dsu.cc">DSU Team</a>';
 	
 	
@@ -32,5 +34,20 @@ class script_base{
 	 * @return <bool>返回检验是否通过
 	 */
 	function memcp_check(){}
+	
+	/**
+	 * 在扩展脚本安装时会自动调用此方法。
+	 */
+	function install(){}
+	
+	/**
+	 * 在扩展脚本升级时会自动调用此方法。
+	 */
+	function upgrade(){}
+	
+	/**
+	 * 在扩展脚本卸载时会自动调用此方法。
+	 */
+	function uninstall(){}
 }
 ?>
