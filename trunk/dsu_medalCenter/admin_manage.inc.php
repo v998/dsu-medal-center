@@ -5,16 +5,16 @@
 
 	$Id$
 */
-(!defined('IN_DISCUZ') || !defined('IN_DISCUZ')) && exit('Access Denied');
+(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) && exit('Access Denied');
 
 loadcache('plugin');
 $cvars = &$_G['cache']['plugin']['dsu_medalCenter'];
-$cvars['modlist'] = is_array($cvars['modlist']) ? $cvars['modlist'] : (array)unserialize($cvars['modlist']);
+require_once DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/function_common.php';
 
 if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 	if(!submitcheck('medalsubmit')) {
 		showtips('medals_tips');
-		showformheader('medals');
+		showformheader('plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage');
 		showtableheader('medals_list', 'fixpadding');
 		showsubtitle(array('', 'display_order', 'available', 'name', 'description', 'medals_image', 'medals_type', ''));
 
@@ -74,6 +74,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 				$comma = ',';
 			}
 			DB::query("DELETE FROM ".DB::table('forum_medal')." WHERE medalid IN ($ids)");
+			DB::query("DELETE FROM ".DB::table('dsu_medalfield')." WHERE medalid IN ($ids)");
 		}
 
 		if(is_array($_G['gp_name'])) {
@@ -106,10 +107,15 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 
 	if(!submitcheck('medaleditsubmit')) {
 
-		$medal = DB::fetch_first("SELECT * FROM ".DB::table('forum_medal')." WHERE medalid='$medalid'");
+		$medal = DB::fetch_first("SELECT m.*, mf.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf ON m.medalid = mf.medalid WHERE m.medalid='$medalid'");
 
 		$checkmedaltype = array($medal['type'] => 'checked');
-
+		$query = DB::query("SELECT typeid, name FROM ".DB::table('dsu_medaltype'));
+		$typevar = array('typeidnew', array());
+		$typevar[1][] = array(0, '未分类');
+		while($tinfo = DB::fetch($query)){
+			$typevar[1][] = array($tinfo['typeid'], $tinfo['name']);
+		}
 		showformheader("plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid=$medalid");
 		showtableheader(cplang('medals_edit').' - '.$medal['name'], 'nobottom');
 		showsetting('medals_name1', 'namenew', $medal['name'], 'text');
@@ -119,32 +125,34 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 			<li'.($checkmedaltype[1] ? ' class="checked"' : '').'><input name="typenew" type="radio" class="radio" value="1" '.$checkmedaltype[1].'>&nbsp;'.$lang['medals_apply_auto'].'</li>
 			<li'.($checkmedaltype[2] ? ' class="checked"' : '').'><input name="typenew" type="radio" class="radio" value="2" '.$checkmedaltype[2].'>&nbsp;'.$lang['medals_apply_noauto'].'</li></ul>'
 		);
-		showsetting('medals_expr1', 'expirationnew', $medal['expiration'], 'text');
+		showsetting('medals_expr1', 'expirationnew', $medal['expiration'], 'number');
+		showsetting('勋章分类', $typevar, $medal['typeid'], 'select');
 		showsetting('medals_memo', 'descriptionnew', $medal['description'], 'text');
 		showtablefooter();
-		$modlist = array_keys($cvars['modlist']);
-		foreach($modlist as $classname){
-   			include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php';
-   			if(class_exists($classname)){
-   				$newclass = new $classname;
-   				if(method_exists($newclass, 'admincp_show')) $newclass->admincp_show();
-   			}
+		$medalfieldSetting = (array)unserialize($medal['setting']);
+		foreach(getMedalExtendClass() as $classname => $newclass){ //扩展：显示设置页面
+			if(method_exists($newclass, 'admincp_show')) $newclass->admincp_show($medalfieldSetting[$classname]);
 		}
 		showtableheader('', 'notop');
 		showsubmit('medaleditsubmit');
 		showtablefooter();
 		showformfooter();
 	} else {
-		$modlist = array_keys($cvars['modlist']);
-		foreach($modlist as $classname){
-   			include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php';
-   			if(class_exists($classname)){
-   				$newclass = new $classname;
-   				if(method_exists($newclass, 'admincp_check')) $newclass->admincp_check();
-   			}
+		foreach(getMedalExtendClass() as $classname => $newclass){ //扩展：检查提交信息
+			if(method_exists($newclass, 'admincp_check')) $newclass->admincp_check();
 		}
 
-
+		$medalfieldSetting = array(); //扩展：保存提交信息
+		foreach(getMedalExtendClass() as $classname => $newclass){
+			if(method_exists($newclass, 'admincp_save')) $medalfieldSetting[$classname] = $newclass->admincp_save();
+		}
+		$medalfieldSetting = addslashes(serialize($medalfieldSetting));
+		DB::insert('dsu_medalfield',array(
+			'medalid' => $medalid,
+			'typeid' => intval($_G['gp_typeidnew']),
+			'setting' => $medalfieldSetting,
+		), false, true);
+		
 		DB::update('forum_medal', array(
 			'name' => $_G['gp_namenew'] ? dhtmlspecialchars($_G['gp_namenew']) : 'name',
 			'type' => $_G['gp_typenew'],

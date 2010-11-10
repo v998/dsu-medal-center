@@ -8,7 +8,7 @@
 class script_dzperm{
 
 	var $name = '积分限制模块';
-	var $version = '1.0';
+	var $version = '1.1';
 	var $copyright = '<a href="www.dsu.cc">DSU Team</a>';
 	
 	function admincp_show(){

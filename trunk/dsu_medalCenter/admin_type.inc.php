@@ -5,7 +5,7 @@
 
 	$Id$
 */
-(!defined('IN_DISCUZ') || !defined('IN_DISCUZ')) && exit('Access Denied');
+(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) && exit('Access Denied');
 
 if(submitcheck('typesubmit')){
 	if(is_array($_G['gp_delete'])) {
@@ -64,7 +64,7 @@ var rowtypedata = [
 ];
 </script>
 EOT;
-	echo '<tr><td></td><td colspan="8"><div><a href="###" onclick="addrow(this, 0)" class="addtr">'.$lang['medals_addnew'].'</a></div></td></tr>';
+	echo '<tr><td></td><td colspan="8"><div><a href="###" onclick="addrow(this, 0)" class="addtr">添加新分类</a></div></td></tr>';
 	showsubmit('typesubmit', 'submit', 'del');
 	showtablefooter();
 	showformfooter();

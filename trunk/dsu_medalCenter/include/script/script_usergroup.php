@@ -11,9 +11,10 @@ class script_usergroup {
 	var $version = '1.0';
 	var $copyright = '<a href="www.jhdxr.com">江湖大虾仁@DSU</a>';
 	
-	function admincp_show(){
-		global $_G, $lang, $medal;
-		$medal['permission'] = unserialize($medal['permission']);$medal['permission'] = $medal['permission'][0];
+	function admincp_show($setting){
+		global $_G, $lang;
+		$var = array();
+		$var['value'] = $setting['usergroup'];
 		showtableheader('允许领取勋章的用户组', 'notop');
 		$query = DB::query("SELECT type, groupid, grouptitle, radminid FROM ".DB::table('common_usergroup')." ORDER BY (creditshigher<>'0' || creditslower<>'0'), creditslower, groupid");
 		$groupselect = array();
@@ -35,6 +36,11 @@ class script_usergroup {
 		global $_G;
 		$usergroup = &$_G['gp_usergroup'];
 		if(in_array('', $usergroup)) $usergroup = array('');
+	}
+	
+	function admincp_save(){
+		global $_G;
+		return array('usergroup' => $_G['gp_usergroup']);
 	}
 }
 ?>
