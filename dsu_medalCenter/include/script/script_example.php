@@ -10,13 +10,15 @@ class script_example{
 	var $name = '范例程序'; //扩展脚本名
 	var $version = '1.0'; //扩展脚本版本号
 	var $copyright = '<a href="www.dsu.cc">DSU Team</a>';
+	//var $introduction = '在这儿你可以填写对这个扩展的介绍';
 	
 	
 	
 	/**
 	 * 显示设置时的内容
+	 * @param <array> $setting 传入admincp_save方法中保存的信息
 	 */
-	function admincp_show(){}
+	function admincp_show($setting){}
 	
 	/**
 	 * 在数据提交后对数据进行合法性检验

@@ -5,7 +5,7 @@
 
 	$Id$
 */
-(!defined('IN_DISCUZ') || !defined('IN_DISCUZ')) && exit('Access Denied');
+(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) && exit('Access Denied');
 
 loadcache('plugin');
 $modlist = &$_G['cache']['plugin']['dsu_medalCenter']['modlist'];
@@ -63,7 +63,7 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 			if(isset($modlist[$classname])){
 				if($modlist[$classname] < $newclass->version){
 					$adminaction .= "<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend&pdo=upgrade&classname=$classname\" class=\"act\">Éý¼¶</a>" ;
-					$versionmsg = '(µ±Ç°°²×°°æ±¾£º'.$modlist[$classname].')';
+					$versionmsg .= '(µ±Ç°°²×°°æ±¾£º'.$modlist[$classname].')';
 				}
 				$namemsg = "<strong>$newclass->name</strong>";
 				$adminaction .= "<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend&pdo=uninstall&classname=$classname\" class=\"act\">Ð¶ÔØ</a>";

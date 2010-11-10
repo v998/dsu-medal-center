@@ -5,7 +5,7 @@
 
 	$Id$
 */
-(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) && exit('Access Denied');
+!defined('IN_DISCUZ') && exit('Access Denied');
 
 
 ?>
