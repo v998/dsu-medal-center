@@ -34,8 +34,9 @@ class script_example{
 	
 	/**
 	 * @return <bool>返回检验是否通过
+	 * @param <array> $setting 传入admincp_save方法中保存的信息
 	 */
-	function memcp_check(){}
+	function memcp_check($setting){}
 	
 	/**
 	 * 在扩展脚本安装时会自动调用此方法。

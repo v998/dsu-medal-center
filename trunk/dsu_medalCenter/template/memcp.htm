@@ -1,0 +1,27 @@
+<!--{subtemplate common/header}-->
+<div id="pt" class="bm cl">
+	<!--{subtemplate common/simplesearchform}-->
+	<div class="z">
+		<a href="./" class="nvhm" title="{lang homepage}">$_G['setting']['bbname']</a> <em>&rsaquo;</em>
+		<a href="home.php">$_G[setting][navs][4][navname]</a> <em>&rsaquo;</em> 
+		<a href="home.php?mod=medal">{lang medals}</a>
+	</div>
+</div>
+
+<div id="ct" class="ct2_a wp cl">
+	<div class="mn">
+		<div class="bm bw0">
+			<h1 class="mt"><img src="{STATICURL}image/feed/medal.gif" alt="勋章中心" class="vm" /> 勋章中心</h1>
+
+			<ul class="tb cl">
+				<li{if empty($_G[gp_action])} class="a"{/if}><a href="#">页面1</a></li>
+				<li{if $_G[gp_action] == 'log'} class="a"{/if}><a href="#">页面2</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="appl">
+		<!--{subtemplate common/userabout}-->
+	</div>
+</div>
+
+<!--{template common/footer}-->
