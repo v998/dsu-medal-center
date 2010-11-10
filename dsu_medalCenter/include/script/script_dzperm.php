@@ -8,12 +8,13 @@
 class script_dzperm{
 
 	var $name = '积分限制模块';
-	var $version = '1.1';
+	var $version = '1.0';
 	var $copyright = '<a href="www.dsu.cc">DSU Team</a>';
 	
 	function admincp_show(){
 		global $_G, $lang, $medal;
-		$medal['permission'] = unserialize($medal['permission']);$medal['permission'] = $medal['permission'][0];
+		$medal['permission'] = unserialize($medal['permission']);
+		$medal['permission'] = $medal['permission'][0];
 		showtableheader('medals_perm', 'notop');
 		$formulareplace .= '\'<u>'.$lang['setting_credits_formula_digestposts'].'</u>\',\'<u>'.$lang['setting_credits_formula_posts'].'</u>\',\'<u>'.$lang['setting_credits_formula_oltime'].'</u>\',\'<u>'.$lang['setting_credits_formula_pageviews'].'</u>\'';
 ?>
@@ -108,7 +109,23 @@ class script_dzperm{
 		$formulapermary[0] = $_G['gp_formulapermnew'];
 		$formulapermary[1] = preg_replace("/(digestposts|posts|threads|oltime|extcredits[1-8])/", "getuserprofile('\\1')", $_G['gp_formulapermnew']);
 		$formulapermnew = addslashes(serialize($formulapermary));
+	}
+	
+	function memcp_check(){
+		global $medal;
+		$medalpermission = $medal['permission'] ? unserialize($medal['permission']) : '';
+		if($medalpermission[0]) {
+			include libfile('function/forum');
+			medalformulaperm(serialize(array('medal' => $medalpermission)), 1);
 
+			if($_G['forum_formulamessage']) {
+				showmessage('medal_permforum_nopermission', 'plugin.php?id=dsu_medalCenter:memcp', array('formulamessage' => $_G['forum_formulamessage'], 'usermsg' => $_G['forum_usermsg']));
+			} else {
+				return TRUE;
+			}
+		} else {
+			return TRUE;
+		}
 	}
 }
 ?>
