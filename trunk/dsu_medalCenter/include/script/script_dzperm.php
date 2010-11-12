@@ -127,5 +127,11 @@ class script_dzperm{
 			return TRUE;
 		}
 	}
+	
+	function memcp_show(){
+		global $medal;
+		include_once libfile('function/forum');
+		return ($medal['permission'] = medalformulaperm($medal['permission'], 2));
+	}
 }
 ?>

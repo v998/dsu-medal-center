@@ -1,10 +1,22 @@
 <!--{subtemplate common/header}-->
+<style type="text/css">
+	.mla li, .mlp li { width: 152px; }
+	.mla1 li { width: 146px; }
+	.mgcl li { padding: 0 5px 5px; width: 350px; height: 120px; }
+		.mgcl img { width: 74px; height: 74px; }
+		.mgcl li p { float: right; width: 236px; text-align: left; white-space: normal; }
+		.mgcl li p.xg1 { display: block; height: 36px; }
+	.mdl li { width: 200px; height: 140px; }
+	.mdlow li { height: 70px; }
+		.mdl img { width: auto; height: auto; max-height: 35px; }
+		.ie6 .mdl img { height: expression(this.height > 35 ? 35 : true); }
+</style>
 <div id="pt" class="bm cl">
 	<!--{subtemplate common/simplesearchform}-->
 	<div class="z">
 		<a href="./" class="nvhm" title="{lang homepage}">$_G['setting']['bbname']</a> <em>&rsaquo;</em>
 		<a href="home.php">$_G[setting][navs][4][navname]</a> <em>&rsaquo;</em> 
-		<a href="home.php?mod=medal">{lang medals}</a>
+		<a href="home.php?mod=medal">勋章中心</a>
 	</div>
 </div>
 
@@ -14,9 +26,79 @@
 			<h1 class="mt"><img src="{STATICURL}image/feed/medal.gif" alt="勋章中心" class="vm" /> 勋章中心</h1>
 
 			<ul class="tb cl">
-				<li{if empty($_G[gp_action])} class="a"{/if}><a href="#">页面1</a></li>
+				<li{if empty($_G[gp_action])} class="a"{/if}><a href="#">勋章列表</a></li>
 				<li{if $_G[gp_action] == 'log'} class="a"{/if}><a href="#">页面2</a></li>
 			</ul>
+			<!--{if empty($_G[gp_action]) || $_G['gp_action'] == 'list'}-->
+				<form method="post" autocomplete="off" action="plugin.php?id=dsu_medalCenter:memcp&action=apply&medalsubmit=yes">
+				<input type="hidden" name="formhash" value="{FORMHASH}" />
+				<input type="hidden" name="medalid" value="" />
+
+				<h3 class="tbmu mbw cl" style="font-weight: normal;">
+					<span class="y xg1 xw0">共 <!--{echo count($medallist);}--> 个</span>
+					<a href="plugin.php?id=dsu_medalCenter:memcp" <!--{if $typeid == 0}--> style="font-weight:bold"<!--{/if}-->>全部</a>
+					<!--{loop $typeArr $typeinfo}-->
+					<span class="pipe"> | </span>
+					<a href="plugin.php?id=dsu_medalCenter:memcp&typeid={$typeinfo[typeid]}" <!--{if $typeid == $typeinfo[typeid]}--> style="font-weight:bold"<!--{/if}-->>$typeinfo[name]</a>
+					<!--{/loop}-->
+				</h3>
+
+				<!--{if $medallist}-->
+					<ul class="ml mlm mdl cl">
+						<!--{loop $medallist $key $medal}-->
+						<li class="pns">
+							<img src="{STATICURL}image/common/$medal[image]" alt="$medal[name]" id="medal{$medal[medalid]}" onmouseover="showMenu({'ctrlid':'medal{$medal[medalid]}','pos':'33'});"/>
+							<p class="mtn" onmouseover="showMenu({'ctrlid':'medal{$medal[medalid]}','pos':'33'});"><strong>$medal[name]</strong></p>
+							<span>
+								<!--{if $medal[type] == 0}-->
+									{lang medals_type_0}
+								<!--{elseif $medal[type] == 1}-->
+									{lang medals_type_1}
+								<!--{elseif $medal[type] == 2}-->
+									{lang medals_type_2}
+								<!--{/if}-->
+							</span>
+							<!--{if $medal[type] && $_G['uid']}-->
+								<button type="button" class="pn" onclick="this.form.medalid.value = '$medal[medalid]';this.form.submit();return false;">
+									<em><!--{if !$medal[permission]}-->申请<!--{else}-->领取<!--{/if}--></em>
+								</button>
+							<!--{/if}-->
+						</li>
+						<div id="medal{$medal[medalid]}_menu" class="p_pop" style="display: none; zoom: 1; max-width: 150px; min-width: 100px;"> 
+							<p class="xg1" title="$medal[description]">$medal[description]</p>
+							<!--{if $medal[expiration]}-->
+								<p><strong>有效期：</strong> $medal[expiration] 天
+							<!--{/if}-->
+							<!--{if $medal[limit]}-->
+								<p><strong>领取要求：</strong></p>
+								$medal[limit]
+							<!--{/if}-->
+					</div>
+						<!--{/loop}-->
+					</ul>
+					<p class="emp">{lang medals_nonexistence}</p>
+						<p class="emp">{lang medals_noavailable}</p>
+				<!--{else}-->
+					<!--{if $medallogs}-->
+						<p class="emp">{lang medals_nonexistence}</p>
+					<!--{else}-->
+						<p class="emp">{lang medals_noavailable}</p>
+					<!--{/if}-->
+				<!--{/if}-->
+				</form>
+
+				<!--{if $lastmedals}-->
+					<h3 class="tbmu">{lang medals_record}</h3>
+					<ul class="el pbw mbw">
+						<!--{loop $lastmedals $lastmedal}-->
+						<li>
+							<a href="home.php?mod=space&uid=$lastmedal[uid]" class="t"><!--{avatar($lastmedal[uid],small)}--></a>
+							<a href="home.php?mod=space&uid=$lastmedal[uid]" class="xi2">$lastmedal[username]</a> {lang medals_message1} $lastmedal[dateline] {lang medals_message2} <strong>$medallist[$lastmedal['medalid']]['name']</strong> {lang medals}
+						</li>
+						<!--{/loop}-->
+					</ul>
+				<!--{/if}-->
+			<!--{/if}-->
 		</div>
 	</div>
 	<div class="appl">
