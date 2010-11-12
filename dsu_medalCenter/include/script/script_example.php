@@ -33,6 +33,12 @@ class script_example{
 	}
 	
 	/**
+	 * 前台勋章列表时显示的设置要求
+	 * @param <array> $setting 传入admincp_save方法中保存的信息
+	 */
+	function admincp_show($setting){}
+	
+	/**
 	 * @return <bool>返回检验是否通过
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
 	 */

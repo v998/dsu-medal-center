@@ -13,6 +13,29 @@ $thisurl = 'plugin.php?id=dsu_medalCenter:memcp';
 require_once DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/function_common.php';
 
 if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
+	$query = DB::query("SELECT * FROM ".DB::table('dsu_medaltype'));
+	$typeArr = array();
+	while($typeinfo = DB::fetch($query)){
+		$typeArr[] = $typeinfo;
+	}
+	
+	$typeid = intval($_G['gp_typeid']);
+	$sqladd = '';
+	
+	$sqladd .= $typeid > 0 ? " and mf.typeid = '$typeid'" : '';
+	$query = DB::query("SELECT mf.*, m.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf USING(medalid) WHERE 1 $sqladd");
+	$medallist = array();
+	while($medal = DB::fetch($query)){
+		$medalfieldSetting = (array)unserialize($medal['setting']);
+		$medal['limit'] = '';
+		foreach(getMedalExtendClass() as $classname => $newclass){
+			if(method_exists($newclass, 'memcp_show')){
+				$_limit = $newclass->memcp_show($medalfieldSetting[$classname]);
+				if($_limit) $medal['limit'] .= "<p>$_limit</p>";
+			}
+		}
+		$medallist[$medal['medalid']] = $medal;
+	}
 }else if($_G['gp_action'] == 'apply'){ //¡Ï»°ªÚ…Í«Î—´’¬
 	$medalid = intval($_G['gp_medalid']);
 	$medal = DB::fetch_first("SELECT m.*, mf.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf ON m.medalid = mf.medalid WHERE m.medalid='$medalid'");
