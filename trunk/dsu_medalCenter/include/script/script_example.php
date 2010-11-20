@@ -15,7 +15,7 @@ class script_example{
 	
 	
 	/**
-	 * 显示设置时的内容
+	 * 设置时显示的内容（直接在函数中输出即可）
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
 	 */
 	function admincp_show($setting){}
@@ -34,13 +34,18 @@ class script_example{
 	
 	/**
 	 * 前台勋章列表时显示的设置要求
+	 * 建议采用如下设置格式：
+	 * 		条件标题：粗体
+	 * 		条件内容：如果满足的条件显示为绿色，如果不满足显示为红色
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
+	 * @return <string>返回要显示的内容
 	 */
-	function admincp_show($setting){}
+	function memcp_show($setting){}
 	
 	/**
-	 * @return <bool>返回检验是否通过
+	 * 检验用户是否满足领取要求
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
+	 * @return <bool>返回检验是否通过
 	 */
 	function memcp_check($setting){}
 	

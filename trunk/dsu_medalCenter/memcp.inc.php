@@ -31,7 +31,7 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 		foreach(getMedalExtendClass() as $classname => $newclass){
 			if(method_exists($newclass, 'memcp_show')){
 				$_limit = $newclass->memcp_show($medalfieldSetting[$classname]);
-				if($_limit) $medal['limit'] .= "<p>$_limit</p>";
+				if($_limit) $medal['limit'] .= $_limit."<br />";//"<p>$_limit</p>";
 			}
 		}
 		$medallist[$medal['medalid']] = $medal;
