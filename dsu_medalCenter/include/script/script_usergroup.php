@@ -42,5 +42,35 @@ class script_usergroup {
 		global $_G;
 		return array('usergroup' => $_G['gp_usergroup']);
 	}
+	
+	function memcp_show($setting){
+		global $_G;
+		$return = '';
+		if($setting['usergroup']){
+			$_check = $this->_memcp_check($setting);
+			if(!$_check) $return = '<font color="red">';
+			$return .= '<strong>用户组为下列用户组之一：</strong><br />';
+			loadcache('usergroups');
+			$common = '';
+			foreach($setting['usergroup'] as $gid){
+				$return .= $common;
+				if($gid == $_G['groupid']) $return .= '<font color="green">';
+				$return .= $_G['cache']['usergroups'][$gid]['grouptitle'];
+				if($gid == $_G['groupid']) $return .= '</font>';
+				$common = ',';
+			}
+			if(!$_check) $return .= '</font>';
+		}
+		return $return;
+	}
+	
+	function memcp_check($setting){
+		return _memcp_check($setting);
+	}
+	
+	function _memcp_check($setting){
+		global $_G;
+		return empty($setting['usergroup']) || in_array($_G['groupid'], $setting['usergroup']);
+	}
 }
 ?>

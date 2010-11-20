@@ -20,7 +20,7 @@ function getMedalExtendClass(){
 
 		$modlist = array_keys($modlist);
 		foreach($modlist as $classname){
-	   		include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php';
+	   		include_once DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php';
 	   		if(class_exists($classname)){
 	   			$newclass = new $classname;
 	   			$classes[$classname] = $newclass;
