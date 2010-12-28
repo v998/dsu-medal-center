@@ -11,8 +11,16 @@ loadcache('plugin');
 $cvars = &$_G['cache']['plugin']['dsu_medalCenter'];
 $thisurl = 'plugin.php?id=dsu_medalCenter:memcp';
 require_once DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/function_common.php';
+include_once DISCUZ_ROOT.'./source/language/lang_template.php';
+include lang('medal');
+
+$page = max(1, intval($_G['gp_page']));
+$tpp = 8;
+$start_limit = ($page - 1) * $tpp;
+
 
 if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
+	//获取分类信息
 	$query = DB::query("SELECT * FROM ".DB::table('dsu_medaltype'));
 	$typeArr = array();
 	while($typeinfo = DB::fetch($query)){
@@ -20,18 +28,18 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	}
 
 	$typeid = intval($_G['gp_typeid']);
-	$sqladd = '';
+	$thisurl .= $typeid > 0 ? "&typeid=$typeid" : '';
 	
-	$sqladd .= $typeid > 0 ? " and mf.typeid = '$typeid'" : '';
-	//分页  BY 阿牧 @ DSU ---开始
-	$amu_limit = 4;
-	$amu_url = 'plugin.php?id=dsu_medalCenter:memcp';
-	$amu_num = DB::result_first("SELECT COUNT(*) FROM ".DB::table('dsu_medalfield')) + DB::result_first("SELECT COUNT(*) FROM ".DB::table('forum_medal'));
-	$amu_page = max(1, intval($_G['gp_page']));
-	$amu_start_limit = ($amu_page - 1) * $amu_limit;
-	$amu_multipage = multi($amu_num, $amu_limit, $amu_page, $amu_url);
-	//分页  BY 阿牧 @ DSU ---结束
-	$query = DB::query("SELECT mf.*, m.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf USING(medalid) WHERE 1 $sqladd LIMIT ".$amu_start_limit." ,".$amu_limit);
+	$mymedal = getMedalByUid();
+
+	$sqladd = '';
+	$sqladd .= $typeid > 0 ? " and mf.typeid = '$typeid'" : ''; //是否限制分类
+	$sqladd .= $_G['cookie']['dsu_medalCenter_hidemymedal'] ? " and m.medalid NOT IN ('".implode("','", $mymedal)."')" : ''; //是否隐藏自己拥有的勋章
+	
+	$num = DB::result_first("SELECT count(*) FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf USING(medalid) WHERE 1 $sqladd");
+	$multipage = multi($num, $tpp, $page, $thisurl);
+	
+	$query = DB::query("SELECT mf.*, m.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf USING(medalid) WHERE 1 $sqladd LIMIT ".$start_limit." ,".$tpp);
 	$medallist = array();
 	while($medal = DB::fetch($query)){
 		$medalfieldSetting = (array)unserialize($medal['setting']);
@@ -42,13 +50,41 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 				if($_limit) $medal['limit'] .= $_limit."<br />";//"<p>$_limit</p>";
 			}
 		}
+		$medal['owned'] = in_array($medal['medalid'], $mymedal);
 		$medallist[$medal['medalid']] = $medal;
 	}
+}else if($_G['gp_action'] == 'mymedal'){
+	$thisurl .= '&action=mymedal';
+	$usermedal = implode("','", getMedalByUid($_G['uid']));
+	$mymedals = array();
+	if($usermedal){
+		$query = DB::query("SELECT m.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf USING(medalid) WHERE medalid IN('$usermedal')");
+		while($medal = DB::fetch($query)){
+			$mymedals[$medal['medalid']] = $medal;
+		}
+	}
+	$num = count($mymedals);
+	
+	$medallognum = DB::result_first("SELECT COUNT(*) FROM ".DB::table('forum_medallog')." WHERE uid='$_G[uid]' AND type<'2'");
+	$multipage = multi($medallognum, $tpp, $page, $thisurl);
 
+	$query = DB::query("SELECT me.*, m.image, m.name FROM ".DB::table('forum_medallog')." me
+			LEFT JOIN ".DB::table('forum_medal')." m USING (medalid)
+			WHERE me.uid='$_G[uid]' ORDER BY me.dateline DESC LIMIT $start_limit,$tpp");
+	$medallog = array();
+	while($medallog = DB::fetch($query)) {
+		$medallog['dateline'] = dgmdate($medallog['dateline']);
+		$medallog['expiration'] = !empty($medallog['expiration']) ? dgmdate($medallog['expiration']) : '';
+		$medallogs[] = $medallog;
+	}
 }else if($_G['gp_action'] == 'apply'){ //领取或申请勋章
 	$medalid = intval($_G['gp_medalid']);
-	$medal = DB::fetch_first("SELECT m.*, mf.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf ON m.medalid = mf.medalid WHERE m.medalid='$medalid'");
-	
+	$medal = DB::fetch_first("SELECT m.*, mf.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf USING(medalid) WHERE m.medalid='$medalid'");
+
+	if(empty($medal) || !$medal['available']) {
+		showmessage('对不起，不存在对应勋章的数据，请返回。');
+	}
+
 	if(!$medal['type']) {
 		showmessage('medal_apply_invalid');
 	}
@@ -65,8 +101,8 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	
 	if($applysucceed) {
 		if($medal['type'] == 1) {
-			$usermedal = DB::fetch_first("SELECT medals FROM ".DB::table('common_member_field_forum')." WHERE uid='$_G[uid]'");
-			$medalnew = $usermedal['medals'] ? $usermedal['medals']."\t".$medal['medalid'] : $medal['medalid'];
+			$usermedal = implode("\t", getMedalByUid($_G['uid']));
+			$medalnew = $usermedal ? $usermedal."\t".$medalid : $medalid;
 			DB::query("UPDATE ".DB::table('common_member_field_forum')." SET medals='$medalnew' WHERE uid='$_G[uid]'");
 			$medalmessage = 'medal_get_succeed';
 		} else {

@@ -65,7 +65,7 @@ class script_usergroup {
 	}
 	
 	function memcp_check($setting){
-		return _memcp_check($setting);
+		return $this->_memcp_check($setting);
 	}
 	
 	function _memcp_check($setting){
