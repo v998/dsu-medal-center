@@ -16,9 +16,17 @@ class script_example{
 	
 	/**
 	 * 设置时显示的内容（直接在函数中输出即可）
+	 * 此函数后于 admincp_show_simple 调用，一般用于显示需采用独立table的设置项
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
 	 */
 	function admincp_show($setting){}
+	
+	/**
+	 * 设置时显示的内容（直接在函数中输出即可）
+	 * 此函数先于 admincp_show 调用，一般用于显示无需采用独立table的设置项
+	 * @param <array> $setting 传入admincp_save方法中保存的信息
+	 */
+	function admincp_show_simple($setting){}
 	
 	/**
 	 * 在数据提交后对数据进行合法性检验

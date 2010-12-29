@@ -95,8 +95,9 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	}
 	
 	$applysucceed = TRUE;
+	$medalfieldSetting = (array)unserialize($medal['setting']);
 	foreach(getMedalExtendClass() as $classname => $newclass){
-		if(method_exists($newclass, 'memcp_check')) $applysucceed = $newclass->memcp_check();
+		if(method_exists($newclass, 'memcp_check')) $applysucceed = $newclass->memcp_check($medalfieldSetting[$classname]);
 	}
 	
 	if($applysucceed) {
@@ -112,6 +113,8 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 		$expiration = empty($medal['expiration'])? 0 : TIMESTAMP + $medal['expiration'] * 86400;
 		DB::query("INSERT INTO ".DB::table('forum_medallog')." (uid, medalid, type, dateline, expiration, status) VALUES ('$_G[uid]', '$medalid', '$medal[type]', '$_G[timestamp]', '$expiration', '0')");
 		showmessage($medalmessage, $thisurl, array('medalname' => $medal['name']));
+	}else{
+		showmessage("对不起，由于您尚未满足申请条件，申请失败！请返回。");
 	}
 }
 	

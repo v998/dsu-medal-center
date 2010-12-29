@@ -11,11 +11,11 @@ class script_usergroup {
 	var $version = '1.0';
 	var $copyright = '<a href="www.jhdxr.com">江湖大虾仁@DSU</a>';
 	
-	function admincp_show($setting){
+	function admincp_show_simple($setting){
 		global $_G, $lang;
 		$var = array();
 		$var['value'] = $setting['usergroup'];
-		showtableheader('允许领取勋章的用户组', 'notop');
+		//showtableheader('允许领取勋章的用户组', 'notop');
 		$query = DB::query("SELECT type, groupid, grouptitle, radminid FROM ".DB::table('common_usergroup')." ORDER BY (creditshigher<>'0' || creditslower<>'0'), creditslower, groupid");
 		$groupselect = array();
 		while($group = DB::fetch($query)) {
@@ -28,8 +28,8 @@ class script_usergroup {
 			($groupselect['specialadmin'] ? '<optgroup label="'.$lang['usergroups_specialadmin'].'">'.$groupselect['specialadmin'].'</optgroup>' : '').
 			'<optgroup label="'.$lang['usergroups_system'].'">'.$groupselect['system'].'</optgroup></select>';
 		
-		showsetting('用户组', '', '', $var['type']);
-		showtablefooter();
+		showsetting('用户组', '', '', $var['type'], '', '', '允许领取勋章的用户组');
+		//showtablefooter();
 	}
 	
 	function admincp_check(){
