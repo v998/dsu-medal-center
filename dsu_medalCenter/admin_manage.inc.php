@@ -109,6 +109,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 
 		$medal = DB::fetch_first("SELECT m.*, mf.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf ON m.medalid = mf.medalid WHERE m.medalid='$medalid'");
 
+		$medalfieldSetting = (array)unserialize($medal['setting']);
 		$checkmedaltype = array($medal['type'] => 'checked');
 		$query = DB::query("SELECT typeid, name FROM ".DB::table('dsu_medaltype'));
 		$typevar = array('typeidnew', array());
@@ -128,8 +129,11 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 		showsetting('medals_expr1', 'expirationnew', $medal['expiration'], 'number');
 		showsetting('勋章分类', $typevar, $medal['typeid'], 'select');
 		showsetting('medals_memo', 'descriptionnew', $medal['description'], 'text');
+		foreach(getMedalExtendClass() as $classname => $newclass){ //扩展：显示设置页面（简单项）
+			if(method_exists($newclass, 'admincp_show_simple')) $newclass->admincp_show_simple($medalfieldSetting[$classname]);
+		}
 		showtablefooter();
-		$medalfieldSetting = (array)unserialize($medal['setting']);
+
 		foreach(getMedalExtendClass() as $classname => $newclass){ //扩展：显示设置页面
 			if(method_exists($newclass, 'admincp_show')) $newclass->admincp_show($medalfieldSetting[$classname]);
 		}
