@@ -15,7 +15,6 @@ class script_usergroup {
 		global $_G, $lang;
 		$var = array();
 		$var['value'] = $setting['usergroup'];
-		//showtableheader('允许领取勋章的用户组', 'notop');
 		$query = DB::query("SELECT type, groupid, grouptitle, radminid FROM ".DB::table('common_usergroup')." ORDER BY (creditshigher<>'0' || creditslower<>'0'), creditslower, groupid");
 		$groupselect = array();
 		while($group = DB::fetch($query)) {
@@ -29,7 +28,6 @@ class script_usergroup {
 			'<optgroup label="'.$lang['usergroups_system'].'">'.$groupselect['system'].'</optgroup></select>';
 		
 		showsetting('用户组', '', '', $var['type'], '', '', '允许领取勋章的用户组');
-		//showtablefooter();
 	}
 	
 	function admincp_check(){
@@ -48,7 +46,7 @@ class script_usergroup {
 		$return = '';
 		if($setting['usergroup']){
 			$_check = $this->_memcp_check($setting);
-			if(!$_check) $return = '<font color="red">';
+			$return .= '<font color="'.($_check ? 'green' : 'red').'">';
 			$return .= '<strong>用户组为下列用户组之一：</strong><br />';
 			loadcache('usergroups');
 			$common = '';
@@ -59,7 +57,7 @@ class script_usergroup {
 				if($gid == $_G['groupid']) $return .= '</font>';
 				$common = ',';
 			}
-			if(!$_check) $return .= '</font>';
+			$return .= '</font>';
 		}
 		return $return;
 	}

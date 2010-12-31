@@ -1,22 +1,11 @@
+<?php
 /*
-Navicat MySQL Data Transfer
+	dsu_medalCenter (C)2010 Discuz Student Union
+	This is NOT a freeware, use is subject to license terms
 
-Source Server         : localhost
-Source Server Version : 50128
-Source Host           : localhost:3306
-Source Database       : dx15
-
-Target Server Type    : MYSQL
-Target Server Version : 50128
-File Encoding         : 65001
-
-Date: 2010-11-21 14:44:55
+	$Id$
 */
-
-SET FOREIGN_KEY_CHECKS=0;
--- ----------------------------
--- Table structure for `pre_dsu_medaltype`
--- ----------------------------
+$sql = <<<EOT
 DROP TABLE IF EXISTS `pre_dsu_medaltype`;
 CREATE TABLE `pre_dsu_medaltype` (
   `typeid` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
@@ -26,9 +15,6 @@ CREATE TABLE `pre_dsu_medaltype` (
 ) ENGINE=MyISAM;
 
 
--- ----------------------------
--- Table structure for `pre_dsu_medalfield`
--- ----------------------------
 DROP TABLE IF EXISTS `pre_dsu_medalfield`;
 CREATE TABLE `pre_dsu_medalfield` (
   `medalid` smallint(6) unsigned NOT NULL,
@@ -39,3 +25,8 @@ CREATE TABLE `pre_dsu_medalfield` (
   PRIMARY KEY (`medalid`),
   KEY `typeid` (`typeid`)
 ) ENGINE=MyISAM;
+EOT;
+runquery($sql);
+$finish = TRUE;
+
+require DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/install/stat.inc.php';
