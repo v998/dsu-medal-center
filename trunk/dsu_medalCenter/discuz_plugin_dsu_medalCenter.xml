@@ -2,7 +2,7 @@
 <root>
 	<item id="Title"><![CDATA[Discuz! Plugin]]></item>
 	<item id="Version"><![CDATA[X1.5]]></item>
-	<item id="Time"><![CDATA[2010-11-21 14:43]]></item>
+	<item id="Time"><![CDATA[2010-12-31 15:11]]></item>
 	<item id="From"><![CDATA[Discuz! Board (http://a.dev.jhdxr.com/dx15/)]]></item>
 	<item id="Data">
 		<item id="plugin">
@@ -114,8 +114,14 @@
 				<item id="__value">
 					<item id="script_dzperm"><![CDATA[1.0]]></item>
 					<item id="script_usergroup"><![CDATA[1.0]]></item>
+					<item id="script_czw_limit"><![CDATA[1.0]]></item>
 				</item>
 			</item>
 		</item>
+		<item id="installfile"><![CDATA[install.php]]></item>
+		<item id="uninstallfile"><![CDATA[uninstall.php]]></item>
+		<item id="license"><![CDATA[版权所有 (C) 2007-2010, 江湖大虾仁 保留所有权利
+	感谢您选择 江湖大虾仁 开发的产品，希望我们的努力能为您拥有更多时间关注网站运营。
+	点击同意表示您接受协议 ([url=http://www.jhdxr.com/blog/html/tech/discuz/czw_license.html]请点击这里阅读[/url])，否则请点击取消。]]></item>
 	</item>
 </root>

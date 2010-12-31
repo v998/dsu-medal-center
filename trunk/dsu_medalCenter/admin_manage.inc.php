@@ -106,7 +106,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 	$medalid = intval($_G['gp_medalid']);
 
 	if(!submitcheck('medaleditsubmit')) {
-
+		echo '<script type="text/javascript" src="static/js/calendar.js"></script>'; //引入日历的JS
 		$medal = DB::fetch_first("SELECT m.*, mf.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf ON m.medalid = mf.medalid WHERE m.medalid='$medalid'");
 
 		$medalfieldSetting = (array)unserialize($medal['setting']);

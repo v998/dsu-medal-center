@@ -60,8 +60,13 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 			$adminaction = $namemsg = $versionmsg = '';
 			$namemsg = $newclass->name;
 			$versionmsg = $newclass->version;
-			if(isset($modlist[$classname])){
-				if($modlist[$classname] < $newclass->version){
+			if(!empty($newclass->introduction)){ //À©Õ¹½éÉÜ
+				$namemsg = '<span title="'.$newclass->introduction.'">'.$namemsg.'</span>';
+			}else{
+				$namemsg = '<span>'.$namemsg.'</span>';
+			}
+			if(isset($modlist[$classname])){ //¼ì²éÊÇ·ñÒÑ¾­°²×°
+				if($modlist[$classname] < $newclass->version){ //ÊÇ·ñÐèÒªÉý¼¶
 					$adminaction .= "<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend&pdo=upgrade&classname=$classname\" class=\"act\">Éý¼¶</a>" ;
 					$versionmsg .= '(µ±Ç°°²×°°æ±¾£º'.$modlist[$classname].')';
 				}
