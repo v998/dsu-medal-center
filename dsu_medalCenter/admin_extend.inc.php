@@ -60,11 +60,7 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 			$adminaction = $namemsg = $versionmsg = '';
 			$namemsg = $newclass->name;
 			$versionmsg = $newclass->version;
-			if(!empty($newclass->introduction)){ //À©Õ¹½éÉÜ
-				$namemsg = '<span title="'.$newclass->introduction.'">'.$namemsg.'</span>';
-			}else{
-				$namemsg = '<span>'.$namemsg.'</span>';
-			}
+			$introduction = empty($newclass->introduction) ? $newclass->name : empty($newclass->introduction);
 			if(isset($modlist[$classname])){ //¼ì²éÊÇ·ñÒÑ¾­°²×°
 				if($modlist[$classname] < $newclass->version){ //ÊÇ·ñÐèÒªÉý¼¶
 					$adminaction .= "<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend&pdo=upgrade&classname=$classname\" class=\"act\">Éý¼¶</a>" ;
@@ -75,6 +71,7 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 			}else{
 				$adminaction .= "<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend&pdo=install&classname=$classname\" class=\"act\">°²×°</a>";
 			}
+			$namemsg = '<span title="'.introduction.'">'.$namemsg.'</span>';
 			showtablerow('', array('class="td25"', 'class="td25"', 'class="td25"', 'class="td25"'), array(
 					$namemsg,
 					$versionmsg,

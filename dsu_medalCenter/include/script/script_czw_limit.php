@@ -8,7 +8,7 @@
 class script_czw_limit{
 	
 	var $name = '领取限制模块'; //扩展脚本名
-	var $version = '1.0'; //扩展脚本版本号
+	var $version = '1.1'; //扩展脚本版本号
 	var $copyright = '<a href="www.jhdxr.com">江湖大虾仁@DSU</a>';
 	var $introduction = '可以对勋章的领取时间、领取数量进行限制';
 	

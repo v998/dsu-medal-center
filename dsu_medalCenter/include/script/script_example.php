@@ -10,7 +10,7 @@ class script_example{
 	var $name = '范例程序'; //扩展脚本名
 	var $version = '1.0'; //扩展脚本版本号
 	var $copyright = '<a href="www.dsu.cc">DSU Team</a>';
-	//var $introduction = '在这儿你可以填写对这个扩展的介绍';
+	var $introduction = '在这儿你可以填写对这个扩展的介绍';
 	
 	
 	
