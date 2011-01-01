@@ -6,7 +6,6 @@
 	$Id$
 */
 (!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) && exit('Access Denied');
-error_reporting(7);
 
 $search_condition = array_merge($_GET, $_POST);
 

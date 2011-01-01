@@ -105,8 +105,14 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 			$usermedal = implode("\t", getMedalByUid($_G['uid']));
 			$medalnew = $usermedal ? $usermedal."\t".$medalid : $medalid;
 			DB::query("UPDATE ".DB::table('common_member_field_forum')." SET medals='$medalnew' WHERE uid='$_G[uid]'");
+			foreach(getMedalExtendClass() as $classname => $newclass){
+				if(method_exists($newclass, 'memcp_get_succeed')) $newclass->memcp_get_succeed($medalfieldSetting[$classname]);
+			}
 			$medalmessage = 'medal_get_succeed';
 		} else {
+			foreach(getMedalExtendClass() as $classname => $newclass){
+			//	if(method_exists($newclass, 'memcp_apply_succeed')) $newclass->memcp_apply_succeed($medalfieldSetting[$classname]);
+			}
 			$medalmessage = 'medal_apply_succeed';
 		}
 
