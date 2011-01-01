@@ -45,4 +45,34 @@ function getMedalByUid($uid = ''){
 	}
 	return $usermedalArr[$uid];
 }
+
+/**
+ * 用于保存一些设置项
+ * @param <string> $name 要保存的设置项的名称
+ * @param <mixed> $data 要保存的设置项的值
+ * @param <string> $script 进行保存操作的来源，此项是为了防止在有相同保存项名称的时候造成的冲突，默认为空。
+ */
+function dsuMedal_saveOption($name, $data, $script = ''){
+	$name = 'dsuMedal'.substr(md5($script.$name), 8, 16);
+	save_syscache($name, $data);
+}
+
+/**
+ * 获取保存的设置项
+ * @param <string> $name 保存的设置项的名称
+ * @param <string> $script 操作来源，此项是为了防止在有相同保存项名称的时候造成的冲突，默认为空。
+ * @return <mixed> 保存的设置项的值
+ */
+function dsuMedal_getOption($name, $script = ''){
+	$name = 'dsuMedal'.substr(md5($script.$name), 8, 16);
+	$option = DB::fetch_first("SELECT /*!40001 SQL_CACHE */ * FROM ".DB::table('common_syscache')." WHERE cname='$name'");
+	if(empty($option)){
+		return NULL;
+	}else{
+		if($option['ctype']) {
+			$option['data'] = unserialize($option['data']);
+		}
+		return $option['data'];
+	}
+}
 ?>

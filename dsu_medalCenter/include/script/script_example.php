@@ -58,6 +58,12 @@ class script_example{
 	function memcp_check($setting){}
 	
 	/**
+	 * 在用户领取成功（前台勋章中心）后，会自动调用此方法
+	 * @param <array> $setting 传入admincp_save方法中保存的信息
+	 */
+	function memcp_get_succeed($setting){}
+	
+	/**
 	 * 在扩展脚本安装时会自动调用此方法。
 	 */
 	function install(){}
