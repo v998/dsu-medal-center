@@ -13,7 +13,7 @@ require_once DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/function_commo
 
 if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 	if(!submitcheck('medalsubmit')) {
-		showtips('medals_tips');
+		showtips('medals_tips'.'<li>如果您想实现一个勋章的多种领取方式，您可以采用复制功能来方便您的操作。</li>');
 		showformheader('plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage');
 		showtableheader('medals_list', 'fixpadding');
 		showsubtitle(array('', 'display_order', 'available', 'name', 'description', 'medals_image', 'medals_type', ''));
@@ -47,8 +47,11 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 				case 2:
 					$medal['type'] = cplang('modals_moderate');
 					break;
+				case 5:
+					$medal['type'] = '积分购买';
+					break;
 			}
-			showtablerow('', array('class="td25"', 'class="td25"', 'class="td25"', '', '', '', 'class="td23"', 'class="td25"'), array(
+			showtablerow('', array('class="td25"', 'class="td25"', 'class="td25"', '', '', '', 'class="td23"', ''), array(
 				"<input class=\"checkbox\" type=\"checkbox\" name=\"delete[]\" value=\"$medal[medalid]\">",
 				"<input type=\"text\" class=\"txt\" size=\"3\" name=\"displayorder[$medal[medalid]]\" value=\"$medal[displayorder]\">",
 				"<input class=\"checkbox\" type=\"checkbox\" name=\"available[$medal[medalid]]\" value=\"1\" $checkavailable>",
@@ -56,7 +59,8 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 				"<input type=\"text\" class=\"txt\" size=\"30\" name=\"description[$medal[medalid]]\" value=\"$medal[description]\">",
 				"<input type=\"text\" class=\"txt\" size=\"20\" name=\"image[$medal[medalid]]\" value=\"$medal[image]\"><img style=\"vertical-align:middle\" src=\"static/image/common/$medal[image]\">",
 				$medal[type],
-				"<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid=$medal[medalid]\" class=\"act\">$lang[detail]</a>"
+				"<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid=$medal[medalid]\" class=\"act\">详情</a> | ".
+				"<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=copy&medalid=$medal[medalid]\" class=\"act\">复制</a>"
 			));
 		}
 
@@ -101,7 +105,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 		updatecache('medals');
 		cpmsg('medals_succeed', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage', 'succeed');
 	}
-}elseif($_G['gp_pdo'] == 'edit'){ //勋章编辑页面
+}elseif($_G['gp_pdo'] == 'edit' || $_G['gp_pdo'] == 'copy'){ //勋章编辑页面
 	
 	$medalid = intval($_G['gp_medalid']);
 
@@ -117,14 +121,15 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 		while($tinfo = DB::fetch($query)){
 			$typevar[1][] = array($tinfo['typeid'], $tinfo['name']);
 		}
-		showformheader("plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid=$medalid");
+		showformheader("plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo={$_G[gp_pdo]}&medalid=$medalid");
 		showtableheader(cplang('medals_edit').' - '.$medal['name'], 'nobottom');
 		showsetting('medals_name1', 'namenew', $medal['name'], 'text');
 		showsetting('medals_img', '', '', '<input type="text" class="txt" size="30" name="imagenew" value="'.$medal['image'].'" ><img src="static/image/common/'.$medal['image'].'">');
 		showsetting('medals_type1', '', '', '<ul class="nofloat" onmouseover="altStyle(this);">
-			<li'.($checkmedaltype[0] ? ' class="checked"' : '').'><input name="typenew" type="radio" class="radio" value="0" '.$checkmedaltype[0].'>&nbsp;'.$lang['medals_adminadd'].'</li>
-			<li'.($checkmedaltype[1] ? ' class="checked"' : '').'><input name="typenew" type="radio" class="radio" value="1" '.$checkmedaltype[1].'>&nbsp;'.$lang['medals_apply_auto'].'</li>
-			<li'.($checkmedaltype[2] ? ' class="checked"' : '').'><input name="typenew" type="radio" class="radio" value="2" '.$checkmedaltype[2].'>&nbsp;'.$lang['medals_apply_noauto'].'</li></ul>'
+			<li'.($checkmedaltype[0] ? ' class="checked"' : '').'><input name="typenew" onclick="$(\'creditbody\').style.display = this.checked ? \'none\' : \'\'" type="radio" class="radio" value="0" '.$checkmedaltype[0].'>&nbsp;'.$lang['medals_adminadd'].'</li>
+			<li'.($checkmedaltype[1] ? ' class="checked"' : '').'><input name="typenew" onclick="$(\'creditbody\').style.display = this.checked ? \'none\' : \'\'" type="radio" class="radio" value="1" '.$checkmedaltype[1].'>&nbsp;'.$lang['medals_apply_auto'].'</li>
+			<li'.($checkmedaltype[2] ? ' class="checked"' : '').'><input name="typenew" onclick="$(\'creditbody\').style.display = this.checked ? \'none\' : \'\'" type="radio" class="radio" value="2" '.$checkmedaltype[2].'>&nbsp;'.$lang['medals_apply_noauto'].'</li>
+			<li'.($checkmedaltype[5] ? ' class="checked"' : '').'><input name="typenew" onclick="$(\'creditbody\').style.display = this.checked ? \'\' : \'none\'" type="radio" class="radio" value="5" '.$checkmedaltype[5].'>&nbsp;积分购买</li></ul>'
 		);
 		showsetting('medals_expr1', 'expirationnew', $medal['expiration'], 'number');
 		showsetting('勋章分类', $typevar, $medal['typeid'], 'select');
@@ -133,7 +138,9 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 			if(method_exists($newclass, 'admincp_show_simple')) $newclass->admincp_show_simple($medalfieldSetting[$classname]);
 		}
 		showtablefooter();
-
+		showtableheader('积分价格', 'notop', 'id="creditbody"');
+		include template('dsu_medalCenter:admin_extcredit');
+		showtablefooter();
 		foreach(getMedalExtendClass() as $classname => $newclass){ //扩展：显示设置页面
 			if(method_exists($newclass, 'admincp_show')) $newclass->admincp_show($medalfieldSetting[$classname]);
 		}
@@ -142,6 +149,10 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 		showtablefooter();
 		showformfooter();
 	} else {
+		if($_G['gp_pdo'] == 'copy'){
+			DB::insert('forum_medal', array('type' => $_G['gp_typenew']));
+			$medalid = DB::insert_id();
+		}
 		foreach(getMedalExtendClass() as $classname => $newclass){ //扩展：检查提交信息
 			if(method_exists($newclass, 'admincp_check')) $newclass->admincp_check();
 		}
@@ -167,7 +178,8 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 		), "medalid='$medalid'");
 
 		updatecache('medals');
-		cpmsg('medals_succeed', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage', 'succeed');
+		$msg = $_G['gp_pdo'] == 'edit' ? 'medals_succeed' : '勋章成功复制。';
+		cpmsg($msg, 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage', 'succeed');
 	}
 
 }
