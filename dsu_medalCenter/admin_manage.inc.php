@@ -138,9 +138,6 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 			if(method_exists($newclass, 'admincp_show_simple')) $newclass->admincp_show_simple($medalfieldSetting[$classname]);
 		}
 		showtablefooter();
-		showtableheader('积分价格', 'notop', 'id="creditbody"');
-		include template('dsu_medalCenter:admin_extcredit');
-		showtablefooter();
 		foreach(getMedalExtendClass() as $classname => $newclass){ //扩展：显示设置页面
 			if(method_exists($newclass, 'admincp_show')) $newclass->admincp_show($medalfieldSetting[$classname]);
 		}
@@ -153,6 +150,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 			DB::insert('forum_medal', array('type' => $_G['gp_typenew']));
 			$medalid = DB::insert_id();
 		}
+
 		foreach(getMedalExtendClass() as $classname => $newclass){ //扩展：检查提交信息
 			if(method_exists($newclass, 'admincp_check')) $newclass->admincp_check();
 		}

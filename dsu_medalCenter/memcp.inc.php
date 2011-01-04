@@ -33,7 +33,7 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	$mymedal = getMedalByUid();
 
 	$sqladd = '';
-	$sqladd = "available='1'";
+	$sqladd = " and available='1'";
 	$sqladd .= $typeid > 0 ? " and mf.typeid = '$typeid'" : ''; //是否限制分类
 	$sqladd .= $_G['cookie']['dsu_medalCenter_hidemymedal'] ? " and m.medalid NOT IN ('".implode("','", $mymedal)."')" : ''; //是否隐藏自己拥有的勋章
 	
@@ -101,6 +101,7 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	$medalfieldSetting = (array)unserialize($medal['setting']);
 	foreach(getMedalExtendClass() as $classname => $newclass){
 		if(method_exists($newclass, 'memcp_check')) $applysucceed = $newclass->memcp_check($medalfieldSetting[$classname]);
+		if(!$applysucceed) die($classname);
 	}
 	
 	if($applysucceed) {

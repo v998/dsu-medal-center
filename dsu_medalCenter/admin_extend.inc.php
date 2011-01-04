@@ -10,11 +10,13 @@
 loadcache('plugin');
 $modlist = &$_G['cache']['plugin']['dsu_medalCenter']['modlist'];
 $modlist = is_array($modlist) ? $modlist : (array)unserialize($modlist);
-
+$sysmod = array('script_market');
 if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×÷
 	$classname = $_G['gp_classname'];
 	if(!preg_match("/^[a-zA-Z0-9_]+$/", $classname) || !file_exists(DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php')){
 		cpmsg("BAD INPUT", '', 'error');
+	}else if(in_array($classname, $sysmod)){
+		cpmsg('ÏµÍ³Ä£¿é£¬½ûÖ¹²Ù×÷£¡', '', 'error');
 	}else{
 		include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php';
 		if(class_exists($classname)){
@@ -46,7 +48,7 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 	updatecache('plugin');
 	cpmsg($msg, 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend', 'succeed');
 }else{
-	showtips('<li>°²×°ĞÂµÄÀ©Õ¹£¬Ğè½«À©Õ¹½Å±¾³ÌĞòÉÏ´«µ½ source/plugin/dsu_medalCenter/include/script/ Ä¿Â¼£¬È»ºó¼´¿ÉÔÚÒÔÏÂÁĞ±íÖĞ°²×°²¢Ê¹ÓÃÁË</li>');
+	showtips('<li>°²×°ĞÂµÄÀ©Õ¹£¬Ğè½«À©Õ¹½Å±¾³ÌĞòÉÏ´«µ½ source/plugin/dsu_medalCenter/include/script/ Ä¿Â¼£¬È»ºó¼´¿ÉÔÚÒÔÏÂÁĞ±íÖĞ°²×°²¢Ê¹ÓÃÁË</li><li>»ı·Ö¹ºÂòÄ£¿éÎªÑ«ÕÂÖĞĞÄÔËĞĞ±ØÒªÄ£¿é£¬ÎŞ·¨ÒÆ³ı</li>');
 	showtableheader('');
 	showsubtitle(array('Ãû³Æ', '°æ±¾ºÅ', '°æÈ¨ĞÅÏ¢', ''));
 	$dir = dir(DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/');
