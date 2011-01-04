@@ -46,7 +46,7 @@ class script_usergroup {
 		$return = '';
 		if($setting['usergroup']){
 			$_check = $this->_memcp_check($setting);
-			$return .= '<font color="'.($_check ? 'green' : 'red').'">';
+			$return .= ($_check ? '' : '<font color="red">');
 			$return .= '<strong>用户组为下列用户组之一：</strong><br />';
 			loadcache('usergroups');
 			$common = '';
@@ -57,7 +57,7 @@ class script_usergroup {
 				if($gid == $_G['groupid']) $return .= '</font>';
 				$common = ',';
 			}
-			$return .= '</font>';
+			$return .= ($_check ? '' : '</font>');
 		}
 		return $return;
 	}

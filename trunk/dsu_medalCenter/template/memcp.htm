@@ -65,11 +65,13 @@
 									自主申请
 								<!--{elseif $medal[type] == 2}-->
 									人工审核
+								<!--{elseif $medal[type] == 5}-->
+									积分购买
 								<!--{/if}-->
 							</span>
 							<!--{if $medal[type] && $_G['uid'] && !$medal['owned']}-->
 								<button type="button" class="pn" onclick="this.form.medalid.value = '$medal[medalid]';this.form.submit();return false;">
-									<em><!--{if !$medal[permission]}-->申请<!--{else}-->领取<!--{/if}--></em>
+									<em><!--{if $medal[type] == 5}-->购买<!--{elseif !$medal[permission]}-->申请<!--{else}-->领取<!--{/if}--></em>
 								</button>
 							<!--{/if}-->
 						</li>
