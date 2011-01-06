@@ -58,11 +58,32 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	}
 }else if($_G['gp_action'] == 'mymedal'){
 	$thisurl .= '&action=mymedal';
-	$usermedal = implode("','", getMedalByUid($_G['uid']));
+	$usermedalArr = getMedalByUid($_G['uid'], true);
 	$mymedals = array();
-	if($usermedal){
-		$query = DB::query("SELECT m.* FROM ".DB::table('forum_medal')." m LEFT JOIN ".DB::table('dsu_medalfield')." mf USING(medalid) WHERE medalid IN('$usermedal') and m.available='1'");
+	if($_G['gp_op'] == 'sethide' && $_G['gp_myMedalHide']){
+		$myMedalHide = (array)$_G['gp_myMedalHide'];
+		foreach($myMedalHide as $medalid => $value){
+			if(($value == 1 || $value == 2) && isset($usermedalArr[$medalid])){
+				$medalExpiration = $usermedalArr[$medalid];
+				$medalExpiration = max(abs($medalExpiration), 1);
+				$medalExpiration = $value == 1 ? -$medalExpiration : $medalExpiration;
+				$usermedalArr[$medalid] = $medalExpiration == 1 ? 0 : $medalExpiration;
+			}
+		}
+		$common = $newmedal = '';
+		foreach($usermedalArr as $medalid => $expiration){
+			$newmedal .= $common.$medalid;
+			$newmedal .= $expiration != 0 ? '|'.$expiration : '';
+			$common = "\t";
+		}
+		if($newmedal)
+			DB::update('common_member_field_forum',array('medals'=>$newmedal),array('uid'=>$_G['uid']));
+	}
+	if($usermedalArr){
+		$query = DB::query("SELECT * FROM ".DB::table('forum_medal')." WHERE medalid IN('".implode("','", array_keys($usermedalArr))."') and available='1'");
 		while($medal = DB::fetch($query)){
+			$medal['expiration'] = $usermedalArr[$medal['medalid']];
+			$medal['hide'] = $medal['expiration'] < 0 ? 1 : 2;
 			$mymedals[$medal['medalid']] = $medal;
 		}
 	}
@@ -77,7 +98,7 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	$medallog = array();
 	while($medallog = DB::fetch($query)) {
 		$medallog['dateline'] = dgmdate($medallog['dateline']);
-		$medallog['expiration'] = !empty($medallog['expiration']) ? dgmdate($medallog['expiration']) : '';
+		$medallog['expiration'] = !empty($medallog['expiration']) ? dgmdate($medallog['expiration'], 'd') : '';
 		$medallogs[] = $medallog;
 	}
 }else if($_G['gp_action'] == 'apply'){ //ÁìÈ¡»òÉêÇëÑ«ÕÂ
