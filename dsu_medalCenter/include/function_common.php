@@ -33,17 +33,24 @@ function getMedalExtendClass(){
 /**
  * 根据用户UID获取用户勋章信息
  * @param <int> $uid 用户UID
- * @return <array>用户的勋章信息
+ * @param <bool> $expiration 返回结果中是否包含勋章的过期时间，默认为false
+ * @return <array>用户的勋章信息（当$expiration为TRUE时为array('勋章1'=>'过期时间1')，否则为array(勋章1，勋章2...)）
  */
-function getMedalByUid($uid = ''){
+function getMedalByUid($uid = '', $expiration = false){
 	global $_G;
 	static $usermedalArr = array();
 	$uid = empty($uid) ? $_G['uid'] : $uid;
 	if(empty($usermedalArr[$uid])) {
 		$usermedal = DB::result_first("SELECT medals FROM ".DB::table('common_member_field_forum')." WHERE uid='$_G[uid]'");
-		$usermedalArr[$uid] = $usermedal ? explode("\t", $usermedal) : array();
+		$medalArr = $usermedal ? explode("\t", $usermedal) : array();
+		$medalArr2 = array();
+		foreach($medalArr as $medal){
+			list($_medalid, $_expiration) = explode('|', $medal);
+			$medalArr2[$_medalid] = intval($_expiration);
+		}
+		$usermedalArr[$uid] = $medalArr2;
 	}
-	return $usermedalArr[$uid];
+	return $expiration ? $usermedalArr[$uid] : array_keys($usermedalArr[$uid]);
 }
 
 /**
