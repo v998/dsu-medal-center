@@ -41,7 +41,7 @@ if($step >= 1 && $step <=2) showsubmenusteps('【DSU】勋章中心安装程序', $stepArr
 $nextstep = max(intval($_G['gp_nextstep']), $step);
 if($nextstep == $step && !empty($stepArr[$step])){
 	$nextstep = $nextstep + 1;
-	cpmsg('操作执行中，请稍后……',"action=plugins&operation=pluginuninstall&dir=dsu_medalCenter&step=$step&nextstep=$nextstep", 'loading');
+	cpmsg('操作执行中，请稍后……',"action=plugins&operation=plugininstall&dir=dsu_medalCenter&step=$step&nextstep=$nextstep", 'loading');
 }else{
 	$nextstep = $step + 1;
 }
@@ -54,10 +54,10 @@ if($step == 1){
 			copy(DISCUZ_ROOT.'./'.$filename[0], DISCUZ_ROOT.'./'.$filename[1]);
 		}
 	}
-	cpmsg($setpArr[$step][0].'完成！进入下一步操作。','action=plugins&operation=plugininstall&dir=dsu_medalCenter&step='.$nextstep, 'succeed');
+	cpmsg('文件处理完成！进入下一步操作。','action=plugins&operation=plugininstall&dir=dsu_medalCenter&step='.$nextstep, 'succeed');
 }elseif($step == 2){
 	runquery($_sql);
-	cpmsg($setpArr[$step][0].'完成！进入下一步操作。','action=plugins&operation=plugininstall&dir=dsu_medalCenter&step='.$nextstep, 'succeed');
+	cpmsg('数据库升级完成！进入下一步操作。','action=plugins&operation=plugininstall&dir=dsu_medalCenter&step='.$nextstep, 'succeed');
 }elseif($step == 3){
 	cpmsg($setpArr[$step][0].'完成！进入下一步操作。','action=plugins&operation=plugininstall&dir=dsu_medalCenter&step='.$nextstep, 'succeed');
 }else{
