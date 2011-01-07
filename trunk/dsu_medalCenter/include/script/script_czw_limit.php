@@ -72,14 +72,14 @@ class script_czw_limit{
 		$this->_MedalCount(0, true);
 	}
 	
-	private function _memcpCheckTime($setting){
+	private function _memcpCheckTime(){
 		$setting = $this->setting;
 		if($setting['startTime'] && $setting['startTime'] > TIMESTAMP) return false;
 		if($setting['endTime'] && $setting['endTime'] < TIMESTAMP) return false;
 		return true;
 	}
 	
-	private function _memcpCheckCount($setting){
+	private function _memcpCheckCount(){
 		$setting = $this->setting;
 		if($setting['getCountLimit']){
 			if($this->_MedalCount() >= $setting['getCountLimit'])
