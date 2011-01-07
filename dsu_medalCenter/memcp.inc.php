@@ -12,7 +12,7 @@ $cvars = &$_G['cache']['plugin']['dsu_medalCenter'];
 $thisurl = 'plugin.php?id=dsu_medalCenter:memcp';
 require_once DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/function_common.php';
 include_once DISCUZ_ROOT.'./source/language/lang_template.php';
-include lang('medal');
+@include_once lang('medal');
 
 $page = max(1, intval($_G['gp_page']));
 $tpp = 8;
@@ -47,6 +47,7 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 		$medal['limit'] = '';
 		$medal['owned'] = in_array($medal['medalid'], $mymedal); 
 		if($medal['type'] >= 1 && !$medal['owned']){ //只有当勋章允许申请或领取并且自己没有此勋章时显示要求
+			$medalid = $medal['medalid'];
 			foreach(getMedalExtendClass() as $classname => $newclass){
 				if(method_exists($newclass, 'memcp_show')){
 					$_limit = $newclass->memcp_show($medalfieldSetting[$classname]);
@@ -126,7 +127,7 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	}
 	
 	if($applysucceed) {
-		if($medal['type'] == 1) {
+		if($medal['type'] == 1 || $medal['type'] == 5) {
 			$usermedal = implode("\t", getMedalByUid($_G['uid']));
 			$medalnew = $usermedal ? $usermedal."\t".$medalid : $medalid;
 			DB::query("UPDATE ".DB::table('common_member_field_forum')." SET medals='$medalnew' WHERE uid='$_G[uid]'");
