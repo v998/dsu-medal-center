@@ -39,10 +39,23 @@ class script_market{
 	}
 	
 	function memcp_check($setting){
+		if($setting['MarketCredit']){
+			$return = self::_checkCredit($setting['MarketCredit']);
+			if(!$return)
+				showmessage('对不起，由于您积分不足，购买失败！请返回。');
+		}
+		return true;
 	}
 	
 	function memcp_get_succeed($setting){
-		
+		global $_G;
+		if($setting['MarketCredit']){
+			$creditArr = $setting['MarketCredit'];
+			foreach($creditArr as $id => &$value){
+				$value *= -1;
+			}
+			updatemembercount($_G['uid'], $creditArr);
+		}
 	}
 	
 	function memcp_show($setting){
@@ -59,6 +72,20 @@ class script_market{
 			}
 		}
 		return $return;
+	}
+	
+	function _checkCredit($creditid, $value=0){
+		global $_G;
+		if(is_array($creditid)){
+			foreach($creditid as $id=>$value){
+				if(!self::_checkCredit($id, $value)) return false;
+			}
+			return true;
+		}else{
+			unset($_G['member']['extcredits'.$creditid]);
+			getuserprofile('extcredits'.$creditid);
+			return $_G['member']['extcredits'.$creditid] >= $value;
+		}
 	}
 }
 ?>
