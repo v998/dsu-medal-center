@@ -72,6 +72,7 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 				$usermedalArr[$medalid] = $medalExpiration == 1 ? 0 : $medalExpiration;
 			}
 		}
+		
 		$common = $newmedal = '';
 		foreach($usermedalArr as $medalid => $expiration){
 			$newmedal .= $common.$medalid;
@@ -123,10 +124,8 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	$applysucceed = TRUE;
 	$medalfieldSetting = (array)unserialize($medal['setting']);
 	foreach(getMedalExtendClass() as $classname => $newclass){
-		if(method_exists($newclass, 'memcp_check')) $applysucceed = $newclass->memcp_check($medalfieldSetting[$classname]);
-		if(!$applysucceed) die($classname);
+		if($applysucceed && method_exists($newclass, 'memcp_check')) $applysucceed = $newclass->memcp_check($medalfieldSetting[$classname]);
 	}
-	
 	if($applysucceed) {
 		if($medal['type'] == 1 || $medal['type'] == 5) {
 			$usermedal = implode("\t", getMedalByUid($_G['uid']));
@@ -142,7 +141,6 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 			}
 			$medalmessage = 'medal_apply_succeed';
 		}
-
 		$expiration = empty($medal['expiration'])? 0 : TIMESTAMP + $medal['expiration'] * 86400;
 		DB::query("INSERT INTO ".DB::table('forum_medallog')." (uid, medalid, type, dateline, expiration, status) VALUES ('$_G[uid]', '$medalid', '$medal[type]', '$_G[timestamp]', '$expiration', '0')");
 		showmessage($medalmessage, $thisurl, array('medalname' => $medal['name']));

@@ -32,7 +32,7 @@ if($nextstep == $step && !empty($stepArr[$step])){
 
 if($step == 1){
 	foreach($fileList as $filename){
-		FSO::unlink($filename);
+		@FSO::unlink($filename);
 	}
 	cpmsg($setpArr[$step][0].'完成！进入下一步操作。','action=plugins&operation=pluginuninstall&dir=dsu_medalCenter&step='.$nextstep, 'succeed');
 }elseif($step == 2){
