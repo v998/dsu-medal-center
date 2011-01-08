@@ -13,6 +13,7 @@ $thisurl = 'plugin.php?id=dsu_medalCenter:memcp';
 require_once DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/function_common.php';
 include_once DISCUZ_ROOT.'./source/language/lang_template.php';
 @include_once lang('medal');
+$navtitle = 'Ñ«ÕÂÖÐÐÄ';
 
 $page = max(1, intval($_G['gp_page']));
 $tpp = 8;

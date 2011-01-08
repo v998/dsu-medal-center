@@ -7,7 +7,8 @@
 */
 
 $filename = array(
-	'data/plugin/dsu_medalCenter',	
+	'data/plugin/dsu_medalCenter',
+	'source/function/cache/cache_dsuMedalCenter.php',
 );
 $_sql = <<<EOT
 DROP TABLE IF EXISTS `pre_dsu_medaltype`;
