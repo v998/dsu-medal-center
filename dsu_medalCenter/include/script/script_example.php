@@ -10,7 +10,7 @@ class script_example{
 	var $name = '范例程序'; //扩展脚本名
 	var $version = '1.0'; //扩展脚本版本号
 	var $copyright = '<a href="www.dsu.cc">DSU Team</a>';
-	var $introduction = '在这儿你可以填写对这个扩展的介绍';
+	var $introduction = '这只是一个供开发者参考的范例脚本，无实际意义，请勿安装于正式站点。'; //在这儿你可以填写对这个扩展的介绍
 	
 	
 	
@@ -19,19 +19,25 @@ class script_example{
 	 * 此函数后于 admincp_show_simple 调用，一般用于显示需采用独立table的设置项
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
 	 */
-	function admincp_show($setting){}
+	function admincp_show($setting){
+		return '';
+	}
 	
 	/**
 	 * 设置时显示的内容（直接在函数中输出即可）
 	 * 此函数先于 admincp_show 调用，一般用于显示无需采用独立table的设置项
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
 	 */
-	function admincp_show_simple($setting){}
+	function admincp_show_simple($setting){
+		return '';
+	}
 	
 	/**
 	 * 在数据提交后对数据进行合法性检验
 	 */
-	function admincp_check(){}
+	function admincp_check(){
+		return true;
+	}
 	
 	/**
 	 * @return <array>返回要保存的内容
@@ -48,20 +54,26 @@ class script_example{
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
 	 * @return <string>返回要显示的内容
 	 */
-	function memcp_show($setting){}
+	function memcp_show($setting){
+		return '';
+	}
 	
 	/**
 	 * 检验用户是否满足领取要求
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
 	 * @return <bool>返回检验是否通过
 	 */
-	function memcp_check($setting){}
+	function memcp_check($setting){
+		return true;
+	}
 	
 	/**
 	 * 在用户领取成功（前台勋章中心）后，会自动调用此方法
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
 	 */
-	function memcp_get_succeed($setting){}
+	function memcp_get_succeed($setting){
+		return;
+	}
 	
 	/**
 	 * 在扩展脚本安装时会自动调用此方法。

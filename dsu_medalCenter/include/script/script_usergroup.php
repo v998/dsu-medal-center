@@ -48,16 +48,14 @@ class script_usergroup {
 			$_check = $this->_memcp_check($setting);
 			$return .= ($_check ? '' : '<font color="red">');
 			$return .= '<strong>用户组为下列用户组之一：</strong><br />';
+			$return .= ($_check ? '' : '</font>');
 			loadcache('usergroups');
 			$common = '';
 			foreach($setting['usergroup'] as $gid){
 				$return .= $common;
-				if($gid == $_G['groupid']) $return .= '<font color="green">';
 				$return .= $_G['cache']['usergroups'][$gid]['grouptitle'];
-				if($gid == $_G['groupid']) $return .= '</font>';
 				$common = ',';
 			}
-			$return .= ($_check ? '' : '</font>');
 		}
 		return $return;
 	}
