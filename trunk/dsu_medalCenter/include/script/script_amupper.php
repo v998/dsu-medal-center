@@ -49,10 +49,10 @@ class script_amupper{
 	function admincp_check(){
 		global $_G, $medalid;
 		$ppercon = is_numeric($_G['gp_ppercon']);
-		if($ppercon){}else{cpmsg('打卡机-连续签到次数设置错误！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid='.$medalid ,'error');}
+		if($ppercon || empty($ppercon)){}else{cpmsg('打卡机-连续签到次数设置错误！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid='.$medalid ,'error');}
 		
 		$pperaddup = is_numeric($_G['gp_pperaddup']);
-		if($pperaddup){}else{cpmsg('打卡机-累计签到次数设置错误！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid='.$medalid ,'error');}			
+		if($pperaddup || empty($pperaddup)){}else{cpmsg('打卡机-累计签到次数设置错误！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid='.$medalid ,'error');}			
 	}
 	
 	/**
