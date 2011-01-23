@@ -48,10 +48,11 @@ class script_amupper{
 	 */
 	function admincp_check(){
 		global $_G, $medalid;
-		$ppercon = intval($_G['gp_ppercon']);
-		if($ppercon >= 0){}else{cpmsg('打卡机-连续签到次数设置错误！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid='.$medalid ,'error');}	
-		$pperaddup = intval($_G['gp_pperaddup']);
-		if($pperaddup >= 0){}else{cpmsg('打卡机-累计签到次数设置错误！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid='.$medalid ,'error');}			
+		$ppercon = is_numeric($_G['gp_ppercon']);
+		if($ppercon){}else{cpmsg('打卡机-连续签到次数设置错误！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid='.$medalid ,'error');}
+		
+		$pperaddup = is_numeric($_G['gp_pperaddup']);
+		if($pperaddup){}else{cpmsg('打卡机-累计签到次数设置错误！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid='.$medalid ,'error');}			
 	}
 	
 	/**
@@ -79,6 +80,7 @@ class script_amupper{
 			$return .= '<strong>连续打卡签到大于等于：</strong>';
 			$return .= ($_check == 1 || $_check == 3  ? '' : '</font>');
 			$return .= $setting['ppercon'].'次';
+
 			$return .= ($_check == 2 || $_check == 3  ? '' : '<font color="red">');
 			$return .= '<BR><strong>累计打卡签到大于等于：</strong>';
 			$return .= ($_check == 2 || $_check == 3  ? '' : '</font>');
