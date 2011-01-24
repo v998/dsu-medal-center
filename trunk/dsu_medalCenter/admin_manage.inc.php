@@ -13,7 +13,8 @@ require_once DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/function_commo
 
 if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 	if(!submitcheck('medalsubmit')) {
-		showtips('medals_tips'.'<li>如果您想实现一个勋章的多种领取方式，您可以采用复制功能来方便您的操作。</li>');
+		showtips('<li>本功能用于设置可以颁发给用户的勋章信息，勋章图片中请填写图片文件名，并将相应图片文件上传到 static/image/common/ 目录中。</li>
+		<li>如果您想实现一个勋章的多种领取方式，您可以采用复制功能来简化您的操作。</li>');
 		showformheader('plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage');
 		showtableheader('medals_list', 'fixpadding');
 		showsubtitle(array('', 'display_order', 'available', 'name', 'description', 'medals_image', 'medals_type', ''));
@@ -122,7 +123,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 			$typevar[1][] = array($tinfo['typeid'], $tinfo['name']);
 		}
 		showformheader("plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo={$_G[gp_pdo]}&medalid=$medalid");
-		showtableheader(cplang('medals_edit').' - '.$medal['name'], 'nobottom');
+		showtableheader(($_G['gp_pdo'] == 'edit' ? '编辑勋章' : '复制勋章').' - '.$medal['name'], 'nobottom');
 		showsetting('medals_name1', 'namenew', $medal['name'], 'text');
 		showsetting('medals_img', '', '', '<input type="text" class="txt" size="30" name="imagenew" value="'.$medal['image'].'" ><img src="static/image/common/'.$medal['image'].'">');
 		showsetting('medals_type1', '', '', '<ul class="nofloat" onmouseover="altStyle(this);">

@@ -15,6 +15,23 @@ class plugin_dsu_medalCenter{
 		global $_G;
 		$this->cvars = $_G['cache']['plugin']['dsu_medalCenter'];
 	}
+	
+	/*function global_header() {
+		global $_G;
+		if(defined('CURSCRIPT') && CURSCRIPT == 'admin'){
+			if($_G['gp_action'] == 'medals'){
+				$url = 'admin.php?frames=yes&action=plugins&operation=config&identifier=dsu_medalCenter&pmod=';
+				switch($_G['gp_operation']){
+					case 'mod':
+						$url .= 'admin_mod';
+						break;
+					default:
+						$url .= 'admin_manage';
+				}
+				echo '<script>window.location.href ="'.$url.'"</script>';
+			}
+		}
+	}*/
 }
 
 class plugin_dsu_medalCenter_home extends plugin_dsu_medalCenter{
