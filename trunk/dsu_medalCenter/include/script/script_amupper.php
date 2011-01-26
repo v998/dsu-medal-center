@@ -9,7 +9,7 @@ class script_amupper{
 	
 	var $name = '打卡机扩展模块'; //扩展脚本名
 	var $version = '1.0'; //扩展脚本版本号
-	var $copyright = '<a href="www.dsu.cc">DSU Team</a>';
+	var $copyright = '<a href="www.dsu.cc">阿牧&nbsp;@&nbsp;DSU</a>';
 	var $introduction = '添加领取勋章时所需连续或累计打卡签到次数的要求'; //在这儿你可以填写对这个扩展的介绍
 	
 	
