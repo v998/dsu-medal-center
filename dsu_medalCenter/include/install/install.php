@@ -8,7 +8,7 @@
 //需要复制的文件/文件夹(源地址留空将在目标位置建立一个空文件夹)
 $fileList = array(
 	array('', 'data/plugin/dsu_medalCenter'),
-	array('source/plugin/dsu_medalCenter/include/install/files/cache_dsuMedalCenter.php', 'source/function/cache/cache_dsuMedalCenter.php'),
+	//array('source/plugin/dsu_medalCenter/include/install/files/cache_dsuMedalCenter.php', 'source/function/cache/cache_dsuMedalCenter.php'),
 );
 //数据库升级语句
 $_sql = <<<EOT
