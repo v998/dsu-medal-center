@@ -7,6 +7,8 @@
 */
 !defined('IN_DISCUZ') && exit('Access Denied');
 
+if(!$_G['uid'] && !(empty($_G['gp_action']) || $_G['gp_action'] == 'list')) showmessage('not_loggedin', NULL, array(), array('login'  =>  1));
+
 loadcache('plugin');
 $cvars = &$_G['cache']['plugin']['dsu_medalCenter'];
 $thisurl = 'plugin.php?id=dsu_medalCenter:memcp';
