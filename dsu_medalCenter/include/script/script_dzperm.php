@@ -112,12 +112,11 @@ class script_dzperm{
 	}
 	
 	function memcp_check(){
-		global $medal;
+		global $_G,$medal;
 		$medalpermission = $medal['permission'] ? unserialize($medal['permission']) : '';
 		if($medalpermission[0]) {
 			include libfile('function/forum');
 			medalformulaperm(serialize(array('medal' => $medalpermission)), 1);
-
 			if($_G['forum_formulamessage']) {
 				showmessage('medal_permforum_nopermission', 'plugin.php?id=dsu_medalCenter:memcp', array('formulamessage' => $_G['forum_formulamessage'], 'usermsg' => $_G['forum_usermsg']));
 			} else {
@@ -126,12 +125,16 @@ class script_dzperm{
 		} else {
 			return TRUE;
 		}
+		showmessage('medal_permforum_nopermission', 'plugin.php?id=dsu_medalCenter:memcp', array('formulamessage' => $_G['forum_formulamessage'], 'usermsg' => $_G['forum_usermsg']));
+		return 0;
 	}
 	
 	function memcp_show(){
-		global $medal;
+		global $_G,$medal;
 		include_once libfile('function/forum');
-		return ($medal['permission'] = medalformulaperm($medal['permission'], 2));
+		$medal['permission'] = serialize(array('medal' => unserialize($medal['permission'])));
+		$medal['permission'] = medalformulaperm($medal['permission'],2);
+		return $medal['permission'];
 	}
 }
 ?>
