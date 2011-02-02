@@ -26,25 +26,32 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 			cpmsg('À©Õ¹ÎÄ¼şÒÑ¾­Ëğ»µ£¡', '', 'error');
 		}
 	}
+	$return = TRUE;
 	switch($_G['gp_pdo']){
 		case 'install':
 			$modlist[$classname] = $newclass->version;
-			if(method_exists($newclass, 'install')) $newclass->install();
+			if(method_exists($newclass, 'install')) $return = $newclass->install();
 			$msg = 'Ö¸¶¨À©Õ¹°²×°³É¹¦£¡';
 			break;
 		case 'uninstall':
 			unset($modlist[$classname]);
-			if(method_exists($newclass, 'uninstall')) $newclass->uninstall();
+			if(method_exists($newclass, 'uninstall')) $return = $newclass->uninstall();
 			$msg = 'Ö¸¶¨À©Õ¹Ğ¶ÔØ³É¹¦£¡';
 			break;
 		case 'upgrade':
 			$modlist[$classname] = $newclass->version;
-			if(method_exists($newclass, 'upgrade')) $newclass->upgrade();
+			if(method_exists($newclass, 'upgrade')) $return = $newclass->upgrade();
 			$msg = 'Ö¸¶¨À©Õ¹Éı¼¶³É¹¦£¡';
 			break;
 	}
-	dsuMedal_saveOption('modlist', $modlist);
-	cpmsg($msg, 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend', 'succeed');
+	if(is_array($return)) list($return, $msg2) = $return;
+	$msg = $msg2 ? $msg2 : ($return === FALSE ? '²Ù×÷Ê§°Ü£¡' : $msg);
+	if($return === FALSE) {
+		cpmsg($msg, 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend', 'error');
+	}else{
+		dsuMedal_saveOption('modlist', $modlist);
+		cpmsg($msg, 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend', 'succeed');
+	}
 }else{
 	showtips('<li>°²×°ĞÂµÄÀ©Õ¹£¬Ğè½«À©Õ¹½Å±¾³ÌĞòÉÏ´«µ½ source/plugin/dsu_medalCenter/include/script/ Ä¿Â¼£¬È»ºó¼´¿ÉÔÚÒÔÏÂÁĞ±íÖĞ°²×°²¢Ê¹ÓÃÁË</li><li>»ı·Ö¹ºÂòÄ£¿éÎªÑ«ÕÂÖĞĞÄÔËĞĞ±ØÒªÄ£¿é£¬ÎŞ·¨ÒÆ³ı</li>');
 	showtableheader('');
