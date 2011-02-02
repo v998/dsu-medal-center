@@ -27,17 +27,13 @@ class script_usergroup {
 			($groupselect['specialadmin'] ? '<optgroup label="'.$lang['usergroups_specialadmin'].'">'.$groupselect['specialadmin'].'</optgroup>' : '').
 			'<optgroup label="'.$lang['usergroups_system'].'">'.$groupselect['system'].'</optgroup></select>';
 		
-		showsetting('用户组', '', '', $var['type'], '', '', '允许领取勋章的用户组');
-	}
-	
-	function admincp_check(){
-		global $_G;
-		$usergroup = &$_G['gp_usergroup'];
-		if(in_array('', $usergroup)) $usergroup = array('');
+		showsetting('用户组', '', '', $var['type'], '', '', '允许领取勋章的用户组，留空代表不限制');
 	}
 	
 	function admincp_save(){
 		global $_G;
+		$usergroup = &$_G['gp_usergroup'];
+		if(in_array('', $usergroup)) $usergroup = array();
 		return array('usergroup' => $_G['gp_usergroup']);
 	}
 	
