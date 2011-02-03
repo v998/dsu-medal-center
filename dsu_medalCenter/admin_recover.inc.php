@@ -9,7 +9,7 @@
 
 $limit = 30;
 //PRINT_R($_POST);
-$query = DB::query("SELECT medalid,name,image FROM ".DB::table('forum_medal')." WHERE available ='1' ORDER BY displayorder");
+$query = DB::query("SELECT medalid,name,image,expiration FROM ".DB::table('forum_medal')." WHERE available ='1' ORDER BY displayorder");
 while($medal = DB::fetch($query)){
 	$medalarray[$medal['medalid']]= $medal;
 }
@@ -30,7 +30,8 @@ if($_G['gp_showlogs']=='yes'){
 		if($usernames){
 			if($_G['gp_medals'] == -1){$mdcon = " (medals !='' OR medals ='\t')";}
 			if($_G['gp_medals'] != -1 && $_G['gp_medals']){$mdcon = " (medals='".$_G['gp_medals']."' OR medals LIKE '".$_G['gp_medals']."\t%' OR medals LIKE '%\t".$_G['gp_medals']."')";}
-			ECHO $mdcon;
+			if($_G['gp_medals'] != -1 && $_G['gp_medals'] && $medalarray[$_G['gp_medals']]['expiration']){$mdcon = " (medals LIKE '".$_G['gp_medals']."|%' OR medals LIKE '".$_G['gp_medals']."|%\t%' OR medals LIKE '%\t".$_G['gp_medals']."|%')";}
+			//ECHO $mdcon;
 			$conditions = 'uid IN ('.dimplode($usernames).')';
 			$num = DB::result_first("SELECT COUNT(*) FROM ".DB::table('common_member_field_forum')." WHERE ".$conditions." AND".$mdcon);
 			$page = max(1, intval($_G['gp_page']));
@@ -94,12 +95,8 @@ if($_G['gp_showlogs']=='yes'){
 				DB::insert('forum_medallog',$cdb_medallog);
 			}
 		}
-	}
-
-	//DB::query("UPDATE ".DB::table('common_member_field_forum')." SET medals=replace(medals, '".$_G['gp_medals']."','') WHERE medals LIKE '%".$_G['gp_medals']."%' AND ".$conditions);
-	//DB::query("DELETE FROM ".DB::table('forum_medallog')." WHERE medalid='".$_G['gp_medals']."' AND type<'3' AND ".$conditions);
-	
-	//cpmsg('成功回收！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_recover', 'succeed');
+	}	
+	cpmsg('成功回收！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_recover', 'succeed');
 }else{
 	
 	$mdsel = md2seled($medalarray);
@@ -127,8 +124,9 @@ function mdshow($k,$str,$array,$uid){
 	$strs = explode("\t", $str);
 	if($k == '-1'){
 		foreach($strs as $i => $value){
-			if($array[$value]['name']){
-				$show_out .='<img style="vertical-align:middle" src="static/image/common/'.$array[$value]['image'].'">&nbsp;'.$array[$value]['name'].'&nbsp;&nbsp;<input name="medals['.$uid.'][]" value="'.$value.'" type="hidden">' ;
+			if (strstr($value, '|')){$values = explode("|", $value);$id = $values[0];}else{$id = $value;} 
+			if($array[$id]['name']){
+				$show_out .='<img style="vertical-align:middle" src="static/image/common/'.$array[$id]['image'].'">&nbsp;'.$array[$id]['name'].'&nbsp;&nbsp;<input name="medals['.$uid.'][]" value="'.$value.'" type="hidden">' ;
 			}			
 		}
 	}elseif($k != '-1' && in_array($k,$strs)){
