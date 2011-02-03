@@ -9,8 +9,13 @@
 
 $limit = 30;
 //PRINT_R($_POST);
+$query = DB::query("SELECT medalid,name,image FROM ".DB::table('forum_medal')." WHERE available ='1' ORDER BY displayorder");
+while($medal = DB::fetch($query)){
+	$medalarray[$medal['medalid']]= $medal;
+}
+
+$_G['cache']['dsuMedalCenter'] = $medalarray;
 if($_G['gp_showlogs']=='yes'){
-	loadcache('dsuMedalCenter');
 	$_G['gp_medals'] = intval($_G['gp_medals']);
 	if(!$_G['gp_ok'] && $_G['gp_username'] && $_G['gp_medals']){
 		$url = "admin.php?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_recover&showlogs=yes&username=".$_G['gp_username']."&medals=".$_G['gp_medals'];
@@ -23,7 +28,7 @@ if($_G['gp_showlogs']=='yes'){
 		}
 		$usernames = searchmembers($search_condition);
 		if($usernames){
-			if($_G['gp_medals'] == -1){$mdcon = " medals !=''";}
+			if($_G['gp_medals'] == -1){$mdcon = " (medals !='' OR medals ='\t')";}
 			if($_G['gp_medals'] != -1 && $_G['gp_medals']){$mdcon = " (medals='".$_G['gp_medals']."' OR medals LIKE '".$_G['gp_medals']."\t%' OR medals LIKE '%\t".$_G['gp_medals']."')";}
 			ECHO $mdcon;
 			$conditions = 'uid IN ('.dimplode($usernames).')';
@@ -56,7 +61,7 @@ if($_G['gp_showlogs']=='yes'){
 			showtablerow('', array(' ', ' ', ' ', ' '), array(
 					'',
 					$result['username'],
-					mdshow($_G['gp_medals'],$result['medals'],$_G['cache']['dsuMedalCenter'],$result['uid']),
+					mdshow($_G['gp_medals'],$result['medals'],$medalarray,$result['uid']),
 				));
 			}
 		}else{
@@ -81,18 +86,23 @@ if($_G['gp_showlogs']=='yes'){
 			$medals_rec = $mdout[$value['uid']]['medals'];
 			$medals_new = implode('\t', array_filter(array_diff($medals_old,$medals_rec)));
 			DB::query("UPDATE ".DB::table('common_member_field_forum')." SET medals='{$medals_new}' WHERE uid='{$value['uid']}'");
-			$medals_rec_con = 'medalid IN ('.dimplode($medals_rec).')';
-			DB::query("DELETE FROM ".DB::table('forum_medallog')." WHERE  type<'3' AND ".$medals_rec_con);
+			foreach ($medals_rec as $id => $result){
+				$cdb_medallog['uid'] = $value['uid'];
+				$cdb_medallog['medalid'] = $result;
+				$cdb_medallog['type'] = '-1';
+				$cdb_medallog['dateline'] = $_G['timestamp'];
+				DB::insert('forum_medallog',$cdb_medallog);
+			}
 		}
 	}
 
 	//DB::query("UPDATE ".DB::table('common_member_field_forum')." SET medals=replace(medals, '".$_G['gp_medals']."','') WHERE medals LIKE '%".$_G['gp_medals']."%' AND ".$conditions);
 	//DB::query("DELETE FROM ".DB::table('forum_medallog')." WHERE medalid='".$_G['gp_medals']."' AND type<'3' AND ".$conditions);
 	
-	cpmsg('成功回收！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_recover', 'succeed');
+	//cpmsg('成功回收！', 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_recover', 'succeed');
 }else{
-	loadcache('dsuMedalCenter');
-	$mdsel = md2seled($_G['cache']['dsuMedalCenter']);
+	
+	$mdsel = md2seled($medalarray);
 	showformheader("plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_recover", '', 'configform');
 	showtips('<li>用户名输入框可使用通配符 *，多个值之间用半角逗号“,”分隔。</li><li>当用户名输入&nbsp;*&nbsp;可以删除所有会员的某一个或所有勋章。</li><li></li>');
 	showtableheader('勋章回收');
@@ -117,7 +127,7 @@ function mdshow($k,$str,$array,$uid){
 	$strs = explode("\t", $str);
 	if($k == '-1'){
 		foreach($strs as $i => $value){
-			if($value){
+			if($array[$value]['name']){
 				$show_out .='<img style="vertical-align:middle" src="static/image/common/'.$array[$value]['image'].'">&nbsp;'.$array[$value]['name'].'&nbsp;&nbsp;<input name="medals['.$uid.'][]" value="'.$value.'" type="hidden">' ;
 			}			
 		}
