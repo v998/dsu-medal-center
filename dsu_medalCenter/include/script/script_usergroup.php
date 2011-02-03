@@ -40,7 +40,7 @@ class script_usergroup {
 	function memcp_show($setting){
 		global $_G;
 		$return = '';
-		if($setting['usergroup']){
+		if( !empty($setting['usergroup'][0])){
 			$_check = $this->_memcp_check($setting);
 			$return .= ($_check ? '' : '<font color="red">');
 			$return .= '<strong>用户组为下列用户组之一：</strong><br />';
