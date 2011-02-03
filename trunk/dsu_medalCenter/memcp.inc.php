@@ -118,8 +118,11 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 		showmessage('medal_apply_invalid');
 	}
 	//检查是否已经领取过此勋章
-	$medaldetail = DB::fetch_first("SELECT medalid FROM ".DB::table('forum_medallog')." WHERE uid='$_G[uid]' AND medalid='$medalid' AND type<'3'");
-	if($medaldetail['medalid']) {
+	$query = DB::query("SELECT medalid,type FROM ".DB::table('forum_medallog')." WHERE uid='$_G[uid]' AND medalid='$medalid' ORDER BY dateline");
+	while($medaldetails = DB::fetch($query)){
+		$medaldetail = $medaldetails;
+	}
+	if($medaldetail['type'] == 1 || $medaldetail['type'] == 2) {
 		showmessage('medal_apply_existence', $thisurl);
 	}
 	
