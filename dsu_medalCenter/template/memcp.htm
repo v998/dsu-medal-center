@@ -141,9 +141,11 @@
 						<!--{loop $medallogs $medallog}-->
 						<li style="padding-left:10px;">
 							<!--{if $medallog['type'] == 2 || $medallog['type'] == 3}-->
-								我在 $medallog[dateline]  申请了 <strong>$medallog[name]</strong> 勋章,<!--{if $medallog['type'] == 2}-->等待审核<!--{elseif $medallog['type'] == 3}-->未通过审核<!--{/if}-->
-							<!--{elseif $medallog['type'] != 2 && $medallog['type'] != 3}-->
-								我在 $medallog[dateline] 被授予了 <strong>$medallog[name]</strong> 勋章,<!--{if $medallog[expiration]}-->到期时间: $medallog[expiration]<!--{else}-->永久有效<!--{/if}-->
+								我在 $medallog[dateline]  申请了 <strong>$medallog[name]</strong> 勋章,<!--{if $medallog['type'] == 2}-->等待审核<!--{elseif $medallog['type'] == 3}-->未通过审核<!--{/if}-->！
+							<!--{elseif $medallog['type'] != 2 && $medallog['type'] != 3 && $medallog['type'] != -1}-->
+								我在 $medallog[dateline] 被授予了 <strong>$medallog[name]</strong> 勋章,<!--{if $medallog[expiration]}-->到期时间: $medallog[expiration] <!--{else}-->永久有效<!--{/if}-->！
+							<!--{elseif $medallog['type'] == -1}-->
+								<B>提醒：</B>您的 <strong>$medallog[name]</strong> 勋章, 于 $medallog[dateline] 被系统收回了！
 							<!--{/if}-->
 						</li>
 						<!--{/loop}-->
