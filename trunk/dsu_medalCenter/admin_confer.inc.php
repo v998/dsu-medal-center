@@ -277,7 +277,7 @@ function notifymembers($operation, $variable) {
 				}
 
 				$medalsnew = $comma = '';
-				$medalsnewarray = $medalidarray = array();
+				$medalsnewarray = array();
 				$query = DB::query("SELECT medalid, expiration FROM ".DB::table('forum_medal')." WHERE medalid IN ($medalids) ORDER BY displayorder");
 				while($medal = DB::fetch($query)) {
 					$medal['status'] = empty($medal['expiration']) ? 0 : 1;
@@ -285,7 +285,6 @@ function notifymembers($operation, $variable) {
 					$medal['medal'] = $medal['medalid'].(empty($medal['expiration']) ? '' : '|'.$medal['expiration']);
 					$medalsnew .= $comma.$medal['medal'];
 					$medalsnewarray[] = $medal;
-					$medalidarray[] = $medal['medalid'];
 					$comma = "\t";
 				}
 
@@ -298,9 +297,18 @@ function notifymembers($operation, $variable) {
 						if(empty($medalnew['medals'])) {
 							$addmedalnew = $medalsnew;
 						} else {
-							foreach($medalidarray as $medalid) {
-								if(!in_array($medalid, explode("\t", $medalnew['medals']))){
-									$addmedalnew .= $medalid."\t";
+							$medal_old_arr = explode("\t", $medalnew['medals']);
+							
+							foreach($medal_old_arr as $medaloldid) {
+								if (strstr($medaloldid, '|')){
+									$values = explode("|", $medaloldid);$medalid_old_arr []= $values[0];
+								}else{
+									$medalid_old_arr []= $medaloldid;
+								} 
+							}	
+							foreach($medalsnewarray as $medalid) {
+								if(!in_array($medalid['medalid'], $medalid_old_arr)){
+									$addmedalnew .= $medalid['medal']."\t";
 								}
 							}
 							$addmedalnew .= $medalnew['medals'];
