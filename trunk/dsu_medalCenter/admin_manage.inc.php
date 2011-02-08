@@ -134,7 +134,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 		);
 		showsetting('medals_expr1', 'expirationnew', $medal['expiration'], 'number');
 		showsetting('勋章分类', $typevar, $medal['typeid'], 'select');
-		showsetting('medals_memo', 'descriptionnew', $medal['description'], 'text');
+		showsetting('medals_memo', 'descriptionnew', $medal['description'], 'textarea');
 		foreach(getMedalExtendClass() as $classname => $newclass){ //扩展：显示设置页面（简单项）
 			if(method_exists($newclass, 'admincp_show_simple')) $newclass->admincp_show_simple($medalfieldSetting[$classname]);
 		}
