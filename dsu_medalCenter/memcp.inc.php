@@ -18,7 +18,7 @@ include_once DISCUZ_ROOT.'./source/language/lang_template.php';
 $navtitle = 'Ñ«ÕÂÖÐÐÄ';
 
 $page = max(1, intval($_G['gp_page']));
-$tpp = 8;
+$tpp = 20;
 $start_limit = ($page - 1) * $tpp;
 
 
