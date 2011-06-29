@@ -83,7 +83,9 @@ class script_example{
 	 *	若要同时自定义安装后显示的信息，请返回一个数组，格式为array(安装是否成功, 提示信息)。 e.g. return array(false, '请先安装XX插件后再安装本扩展');
 	 *	注意：考虑到后续扩展性，返回值请设定为TRUE/FALSE/NULL(如无返回值推荐不要实现此方法)/数组
 	 */
-	function install(){}
+	function install(){
+		return array(false, '示例程序仅供开发者参考，请勿用于生产环境！');
+	}
 	
 	/**
 	 * 在扩展脚本升级时会自动调用此方法。

@@ -8,7 +8,7 @@
 class script_usergroup {
 	
 	var $name = '用户组限制模块';
-	var $version = '1.0';
+	var $version = '1.1';
 	var $copyright = '<a href="www.jhdxr.com">江湖大虾仁@DSU</a>';
 	
 	function admincp_show_simple($setting){

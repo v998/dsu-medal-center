@@ -87,5 +87,9 @@ class script_market{
 			return $_G['member']['extcredits'.$creditid] >= $value;
 		}
 	}
+	
+	function uninstall(){
+		return array(false, 'ÏµÍ³Ä£¿é£¬½ûÖ¹Ð¶ÔØ£¡');
+	}
 }
 ?>

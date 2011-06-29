@@ -16,10 +16,10 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 	$classname = $_G['gp_classname'];
 	if(!preg_match("/^[a-zA-Z0-9_]+$/", $classname) || !file_exists(DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php')){
 		cpmsg("BAD INPUT", '', 'error');
-	}else if($_G['gp_pdo'] == 'uninstall' && in_array($classname, $sysmod)){
-		cpmsg('ÏµÍ³Ä£¿é£¬½ûÖ¹²Ù×÷£¡', '', 'error');
+	//}else if($_G['gp_pdo'] == 'uninstall' && in_array($classname, $sysmod)){
+	//	cpmsg('ÏµÍ³Ä£¿é£¬½ûÖ¹²Ù×÷£¡', '', 'error');
 	}else{
-		include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php';
+		@include DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/script/'.$classname.'.php';
 		if(class_exists($classname)){
 			$newclass = new $classname;
 		}else{
@@ -69,12 +69,12 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 			$versionmsg = $newclass->version;
 			$introduction = empty($newclass->introduction) ? $newclass->name : $newclass->introduction;
 			if(isset($modlist[$classname])){ //¼ì²éÊÇ·ñÒÑ¾­°²×°
+				$namemsg = "<strong>$newclass->name</strong>";
+				$adminaction .= "<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend&pdo=uninstall&classname=$classname\" class=\"act\">Ð¶ÔØ</a>";
 				if($modlist[$classname] < $newclass->version){ //ÊÇ·ñÐèÒªÉý¼¶
 					$adminaction .= "<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend&pdo=upgrade&classname=$classname\" class=\"act\">Éý¼¶</a>" ;
 					$versionmsg .= '(µ±Ç°°²×°°æ±¾£º'.$modlist[$classname].')';
 				}
-				$namemsg = "<strong>$newclass->name</strong>";
-				$adminaction .= "<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend&pdo=uninstall&classname=$classname\" class=\"act\">Ð¶ÔØ</a>";
 			}else{
 				$adminaction .= "<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_extend&pdo=install&classname=$classname\" class=\"act\">°²×°</a>";
 			}
