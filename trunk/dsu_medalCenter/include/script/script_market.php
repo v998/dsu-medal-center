@@ -84,7 +84,7 @@ class script_market{
 		}else{
 			unset($_G['member']['extcredits'.$creditid]);
 			getuserprofile('extcredits'.$creditid);
-			return $_G['member']['extcredits'.$creditid] >= $value;
+			return $value >0 && $_G['member']['extcredits'.$creditid] >= $value;
 		}
 	}
 	
