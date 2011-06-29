@@ -29,7 +29,6 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	while($typeinfo = DB::fetch($query)){
 		$typeArr[] = $typeinfo;
 	}
-
 	$typeid = intval($_G['gp_typeid']);
 	$thisurl .= $typeid > 0 ? "&typeid=$typeid" : '';
 	
