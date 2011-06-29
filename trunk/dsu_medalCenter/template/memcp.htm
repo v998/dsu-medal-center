@@ -19,7 +19,6 @@
 	<!--{subtemplate common/simplesearchform}-->
 	<div class="z">
 		<a href="./" class="nvhm" title="{lang homepage}">$_G['setting']['bbname']</a> <em>&rsaquo;</em>
-		<a href="home.php">$_G[setting][navs][4][navname]</a> <em>&rsaquo;</em> 
 		<a href="home.php?mod=medal">勋章中心</a>
 	</div>
 </div>
@@ -29,10 +28,6 @@
 		<div class="bm bw0">
 			<h1 class="mt"><img src="{STATICURL}image/feed/medal.gif" alt="勋章中心" class="vm" /> 勋章中心</h1>
 
-			<ul class="tb cl">
-				<li{if empty($_G[gp_action]) || $_G[gp_action] == 'list'} class="a"{/if}><a href="plugin.php?id=dsu_medalCenter:memcp">勋章列表</a></li>
-				<li{if $_G[gp_action] == 'mymedal'} class="a"{/if}><a href="plugin.php?id=dsu_medalCenter:memcp&action=mymedal">我的勋章</a></li>
-			</ul>
 			<!--{if empty($_G[gp_action]) || $_G['gp_action'] == 'list'}-->
 				<form method="post" autocomplete="off" action="plugin.php?id=dsu_medalCenter:memcp&action=apply&medalsubmit=yes">
 				<input type="hidden" name="formhash" value="{FORMHASH}" />
@@ -158,7 +153,13 @@
 		</div>
 	</div>
 	<div class="appl">
-		<!--{subtemplate common/userabout}-->
+		<div class="tbn">
+			<h2 class="mt bbda">勋章中心</h2>
+			<ul>
+				<li{if empty($_G[gp_action]) || $_G[gp_action] == 'list'} class="a"{/if}><a href="plugin.php?id=dsu_medalCenter:memcp">勋章列表</a></li>
+				<li{if $_G[gp_action] == 'mymedal'} class="a"{/if}><a href="plugin.php?id=dsu_medalCenter:memcp&action=mymedal">我的勋章</a></li>
+			</ul>
+		</div>
 	</div>
 </div>
 

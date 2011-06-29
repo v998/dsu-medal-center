@@ -8,10 +8,10 @@
 !defined('IN_DISCUZ') && exit('Access Denied');
 
 class plugin_dsu_medalCenter{
-	var $identifier = 'dsu_medalCenter';
-	var $cvars=array();
+	private $identifier = 'dsu_medalCenter';
+	private $cvars=array();
 
-	function __construct() {
+	public function __construct() {
 		global $_G;
 		$this->cvars = $_G['cache']['plugin']['dsu_medalCenter'];
 	}
@@ -35,14 +35,17 @@ class plugin_dsu_medalCenter{
 }
 
 class plugin_dsu_medalCenter_home extends plugin_dsu_medalCenter{
-	function __construct(){
+	public function __construct(){
 		parent::__construct();
 	}
 	
-	function medal_autoforward_output(){
+	
+	//&#21520;&#27133;&#65306;&#35813;&#27515;&#30340;discuz&#19981;&#30693;&#36947;&#24590;&#20040;&#20462;&#25913;&#20102;&#23884;&#20837;&#28857;&#30340;&#21629;&#21517;&#35268;&#21017;&#65292;&#23548;&#33268;&#20986;&#29616;&#20102;&#36825;&#20040;&#35809;&#24322;&#30340;&#20989;&#25968;&#21517;&#12290;&#12290;&#12290;
+	public function space_(){
 		global $_G;
 		if($_G['gp_mod']=='medal'){
-			echo '<script>window.location.href ="plugin.php?id=dsu_medalCenter:memcp"</script>';
+			//echo '<script>window.location.href ="plugin.php?id=dsu_medalCenter:memcp"</script>';
+			//exit();
 		}
 	}
 }
