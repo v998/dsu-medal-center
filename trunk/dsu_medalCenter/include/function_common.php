@@ -81,4 +81,16 @@ function getMedalExtendClass(){
 	}
 	return $classes;
 }
+
+/**
+ * 获取勋章中心插件设置项并进行解析
+ * @return <array>解析后的勋章中心插件设置项
+ */
+function dsuMedal_phraseConfig(){
+	global $_G;
+	loadcache('plugin');
+	$cvars = &$_G['cache']['plugin']['dsu_medalCenter'];
+	$cvars['showMedalLimit'] = (array) unserialize($cvars['showMedalLimit']);
+	return $cvars;
+}
 ?>
