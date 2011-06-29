@@ -107,16 +107,32 @@
 				<!--{if $mymedals}-->
 					<form name="name" action="{$thisurl}&op=sethide" method="post">
 					<script type="text/javascript">
+						var medalShowCount = {$medalShowCount};
 						function dsuMedal_hideMyMedal (mymedalid) {
 							var medalp = $('mymedal'+mymedalid);
 							if(medalp){
 								var _do = medalp.style.color == 'gray' ? 2 : 1;
-								medalp.style.color = _do == 1 ? 'gray' : 'black';
+								if(_do == 1){
+									medalShowCount--;
+									medalp.style.color = 'gray';
+								}else{
+									medalShowCount++;
+									if({$medalShowLimit} && medalShowCount > {$medalShowLimit}){
+										showDialog("您最多只能显示{$medalShowLimit}枚勋章！", 'notice', '', null, 1, null, '', '', '', 3);
+										medalShowCount--;
+										return false;
+									}
+									medalp.style.color = 'black';
+								}
+								
 								$('mymedal_'+mymedalid).value = _do;
 							}
 						}
 					</script>
-					<div class="tbmu mbw cl"><span class="y xg1 xw0">拥有勋章 $num 枚</span><h3>我的勋章</h3>(点击勋章可以设置在帖子中是否显示相应勋章，勋章名黑色代表显示，灰色代表隐藏)</div>
+					<div class="tbmu mbw cl"><span class="y xg1 xw0">拥有勋章 $num 枚，当前显示{$medalShowCount}枚</span><h3>我的勋章</h3>
+						<p>(点击勋章可以设置在帖子中是否显示相应勋章，勋章名黑色代表显示，灰色代表隐藏)</p>
+						<p>(您最多可以设置显示{$medalShowLimit}枚勋章，如果设置数量多余{$medalShowLimit}枚系统将自动隐藏部分勋章)</p>
+					</div>
 					<ul class="ml mlm mdl mdlow cl">
 						<!--{loop $mymedals $mymedal}-->
 						<li id="mymedal{$mymedal[medalid]}" <!--{if $mymedal[hide] == 1}-->style="color:gray"<!--{/if}--> onclick="dsuMedal_hideMyMedal({$mymedal[medalid]})">

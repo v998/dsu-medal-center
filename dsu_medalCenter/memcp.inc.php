@@ -9,12 +9,12 @@
 
 if(!$_G['uid'] && !(empty($_G['gp_action']) || $_G['gp_action'] == 'list')) showmessage('not_loggedin', NULL, array(), array('login'  =>  1));
 
-loadcache('plugin');
-$cvars = &$_G['cache']['plugin']['dsu_medalCenter'];
-$thisurl = 'plugin.php?id=dsu_medalCenter:memcp';
 require_once DISCUZ_ROOT.'./source/plugin/dsu_medalCenter/include/function_common.php';
 include_once DISCUZ_ROOT.'./source/language/lang_template.php';
 @include_once lang('medal');
+
+$cvars = dsuMedal_phraseConfig();
+$thisurl = 'plugin.php?id=dsu_medalCenter:memcp';
 $navtitle = 'Ñ«ÕÂÖÐÐÄ';
 
 $page = max(1, intval($_G['gp_page']));
@@ -61,7 +61,9 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	}
 }else if($_G['gp_action'] == 'mymedal'){
 	$thisurl .= '&action=mymedal';
+	$medalShowLimit = $cvars['showMedalLimit'][$_G['groupid']];
 	$usermedalArr = getMedalByUid($_G['uid'], true);
+
 	$mymedals = array();
 	if($_G['gp_op'] == 'sethide' && $_G['gp_myMedalHide']){
 		$myMedalHide = (array)$_G['gp_myMedalHide'];
@@ -75,19 +77,26 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 		}
 		
 		$common = $newmedal = '';
+		$medalShowCount = 0;
 		foreach($usermedalArr as $medalid => $expiration){
 			$newmedal .= $common.$medalid;
+			if($medalShowLimit > 0 && $expiration >= 0 && (++$medalShowCount > $medalShowLimit)) {
+				$expiration = $expiration == 0 ? -1 : -$expiration;
+			}
 			$newmedal .= $expiration != 0 ? '|'.$expiration : '';
 			$common = "\t";
 		}
+		$i = 0;
 		if($newmedal)
 			DB::update('common_member_field_forum',array('medals'=>$newmedal),array('uid'=>$_G['uid']));
 	}
 	if($usermedalArr){
 		$query = DB::query("SELECT * FROM ".DB::table('forum_medal')." WHERE medalid IN('".implode("','", array_keys($usermedalArr))."') and available='1'");
+		$medalShowCount = 0;
 		while($medal = DB::fetch($query)){
 			$medal['expiration'] = $usermedalArr[$medal['medalid']];
 			$medal['hide'] = $medal['expiration'] < 0 ? 1 : 2;
+			if($medal['hide'] == 2) $medalShowCount++;
 			$mymedals[$medal['medalid']] = $medal;
 		}
 	}
