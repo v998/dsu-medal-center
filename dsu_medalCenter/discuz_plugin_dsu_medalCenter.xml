@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <root>
 	<item id="Title"><![CDATA[Discuz! Plugin]]></item>
-	<item id="Version"><![CDATA[X1.5]]></item>
-	<item id="Time"><![CDATA[2011-01-09 03:07]]></item>
-	<item id="From"><![CDATA[Discuz! Board (http://a.dev.jhdxr.com/dx15/)]]></item>
+	<item id="Version"><![CDATA[X2]]></item>
+	<item id="Time"><![CDATA[2011-06-29 09:47]]></item>
+	<item id="From"><![CDATA[Discuz! Board (http://a.dev.jhdxr.com/dx2/)]]></item>
 	<item id="Data">
 		<item id="plugin">
 			<item id="available"><![CDATA[1]]></item>
@@ -14,7 +14,7 @@
 			<item id="datatables"><![CDATA[]]></item>
 			<item id="directory"><![CDATA[dsu_medalCenter/]]></item>
 			<item id="copyright"><![CDATA[Discuz Student Union  www.dsu.cc]]></item>
-			<item id="version"><![CDATA[1.0 dev7]]></item>
+			<item id="version"><![CDATA[1.1.1]]></item>
 			<item id="__modules">
 				<item id="0">
 					<item id="name"><![CDATA[hook]]></item>
@@ -102,11 +102,11 @@
 				</item>
 			</item>
 		</item>
-		<item id="version"><![CDATA[X1.5]]></item>
+		<item id="version"><![CDATA[X2]]></item>
 		<item id="installfile"><![CDATA[setup.php]]></item>
 		<item id="uninstallfile"><![CDATA[setup.php]]></item>
 		<item id="upgradefile"><![CDATA[setup.php]]></item>
-		<item id="license"><![CDATA[°æÈ¨ËùÓÐ (C) 2007-2010, ½­ºþ´óÏºÈÊ ±£ÁôËùÓÐÈ¨Àû
+		<item id="license"><![CDATA[°æÈ¨ËùÓÐ (C) 2007-2011, ½­ºþ´óÏºÈÊ ±£ÁôËùÓÐÈ¨Àû
 	¸ÐÐ»ÄúÑ¡Ôñ ½­ºþ´óÏºÈÊ ¿ª·¢µÄ²úÆ·£¬Ï£ÍûÎÒÃÇµÄÅ¬Á¦ÄÜÎªÄúÓµÓÐ¸ü¶àÊ±¼ä¹Ø×¢ÍøÕ¾ÔËÓª¡£
 	µã»÷Í¬Òâ±íÊ¾Äú½ÓÊÜÐ­Òé ([url=http://www.jhdxr.com/blog/html/tech/discuz/czw_license.html]Çëµã»÷ÕâÀïÔÄ¶Á[/url])£¬·ñÔòÇëµã»÷È¡Ïû¡£]]></item>
 	</item>
