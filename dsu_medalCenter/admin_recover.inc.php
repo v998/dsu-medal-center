@@ -3,7 +3,7 @@
 	dsu_medalCenter (C)2010 Discuz Student Union
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: admin_type.inc.php 7 2010-11-10 01:51:23Z chuzhaowei@gmail.com $
+	$Id$
 */
 (!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) && exit('Access Denied');
 

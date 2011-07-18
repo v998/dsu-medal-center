@@ -42,7 +42,7 @@ class script_market{
 		if($setting['MarketCredit']){
 			$return = self::_checkCredit($setting['MarketCredit']);
 			if(!$return)
-				showmessage('对不起，由于您积分不足，购买失败！请返回。');
+				return '对不起，由于您积分不足，购买失败！请返回。';
 		}
 		return true;
 	}
