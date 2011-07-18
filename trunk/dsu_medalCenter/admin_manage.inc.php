@@ -61,7 +61,8 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 				"<input type=\"text\" class=\"txt\" size=\"20\" name=\"image[$medal[medalid]]\" value=\"$medal[image]\"><img style=\"vertical-align:middle\" src=\"static/image/common/$medal[image]\">",
 				$medal[type],
 				"<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=edit&medalid=$medal[medalid]\" class=\"act\">详情</a> | ".
-				"<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=copy&medalid=$medal[medalid]\" class=\"act\">复制</a>"
+				"<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=copy&medalid=$medal[medalid]\" class=\"act\">复制</a>",
+				//"<a href=\"".ADMINSCRIPT."?action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage&pdo=view&medalid=$medal[medalid]\" class=\"act\">查看</a> | ",
 			));
 		}
 
@@ -181,5 +182,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 		cpmsg($msg, 'action=plugins&operation=config&identifier=dsu_medalCenter&pmod=admin_manage', 'succeed');
 	}
 
+}elseif($_G['gp_pdo'] == 'view'){ //勋章查看页面
+	
 }
 ?>

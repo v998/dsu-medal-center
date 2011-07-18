@@ -61,7 +61,10 @@ class script_example{
 	/**
 	 * 检验用户是否满足领取要求
 	 * @param <array> $setting 传入admincp_save方法中保存的信息
-	 * @return <bool>返回检验是否通过
+	 * @return <mixed>返回检验是否通过
+	 *	返回TRUE代表检验成功
+	 *	返回FALSE代表检验失败（默认，当返回值非TRUE时视为检验失败）
+	 *	若要同时自定义安装后显示的信息，请返回一个数组，格式为array(安装是否成功, 提示信息)。 e.g. return array(false, '请先安装XX插件后再安装本扩展');
 	 */
 	function memcp_check($setting){
 		return true;
@@ -79,7 +82,7 @@ class script_example{
 	 * 在扩展脚本安装时会自动调用此方法。
 	 * @return <mixed>
 	 *	返回FALSE代表安装失败
-	 *	返回TRUE代表安装成功（默认，当返回值非布尔型，或无返回值时视为安装成功）
+	 *	返回TRUE代表安装成功（默认，当返回值非布尔型或数组时，或无返回值时视为安装成功）
 	 *	若要同时自定义安装后显示的信息，请返回一个数组，格式为array(安装是否成功, 提示信息)。 e.g. return array(false, '请先安装XX插件后再安装本扩展');
 	 *	注意：考虑到后续扩展性，返回值请设定为TRUE/FALSE/NULL(如无返回值推荐不要实现此方法)/数组
 	 */
@@ -91,20 +94,24 @@ class script_example{
 	 * 在扩展脚本升级时会自动调用此方法。
 	 * @return <mixed>
 	 *	返回FALSE代表升级失败
-	 *	返回TRUE代表升级成功（默认，当返回值非布尔型，或无返回值时视为升级成功）
+	 *	返回TRUE代表升级成功（默认，当返回值非布尔型或数组时，或无返回值时视为升级成功）
 	 *	若要同时自定义升级后显示的信息，请返回一个数组，格式为array(升级是否成功, 提示信息)。 e.g. return array(false, '扩展与配套插件版本不匹配，请先更新插件');
 	 *	注意：考虑到后续扩展性，返回值请设定为TRUE/FALSE/NULL(如无返回值推荐不要实现此方法)/数组
 	 */
-	function upgrade(){}
+	function upgrade(){
+		return array(false, '示例程序仅供开发者参考，请勿用于生产环境！');
+	}
 	
 	/**
 	 * 在扩展脚本卸载时会自动调用此方法。
 	 * @return <mixed>
 	 *	返回FALSE代表卸载失败
-	 *	返回TRUE代表卸载成功（默认，当返回值非布尔型，或无返回值时视为卸载成功）
+	 *	返回TRUE代表卸载成功（默认，当返回值非布尔型或数组时，或无返回值时视为卸载成功）
 	 *	若要同时自定义卸载后显示的信息，请返回一个数组，格式为array(卸载是否成功, 提示信息)。 e.g. return array(false, '系统模块禁止卸载');
 	 *	注意：考虑到后续扩展性，返回值请设定为TRUE/FALSE/NULL(如无返回值推荐不要实现此方法)/数组
 	 */
-	function uninstall(){}
+	function uninstall(){
+		return array(false, '示例程序仅供开发者参考，请勿用于生产环境！');
+	}
 }
 ?>

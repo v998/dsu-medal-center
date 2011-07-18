@@ -138,6 +138,10 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	$medalfieldSetting = (array)unserialize($medal['setting']);
 	foreach(getMedalExtendClass() as $classname => $newclass){
 		if($applysucceed && method_exists($newclass, 'memcp_check')) $applysucceed = $newclass->memcp_check($medalfieldSetting[$classname]);
+		if($applysucceed !== TRUE){
+			$msg = $applysucceed === FALSE ? "对不起，由于您尚未满足申请条件，申请失败！请返回。" : $applysucceed;
+			showmessage($msg);
+		}
 	}
 	if($applysucceed) {
 		if($medal['type'] == 1 || $medal['type'] == 5) {
