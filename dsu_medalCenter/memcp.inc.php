@@ -127,6 +127,7 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	}
 	//检查是否已经领取过此勋章
 	$query = DB::query("SELECT medalid,type FROM ".DB::table('forum_medallog')." WHERE uid='$_G[uid]' AND medalid='$medalid' ORDER BY dateline");
+	//$medaldetail = DB::fetch_first("SELECT medalid FROM ".DB::table('forum_medallog')." WHERE uid='$_G[uid]' AND medalid='$medalid' AND type<'3'");
 	while($medaldetails = DB::fetch($query)){
 		$medaldetail = $medaldetails;
 	}
@@ -144,22 +145,35 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 		}
 	}
 	if($applysucceed) {
+		$expiration = empty($medal['expiration'])? 0 : TIMESTAMP + $medal['expiration'] * 86400;
 		if($medal['type'] == 1 || $medal['type'] == 5) {
 			$usermedal = implode("\t", getMedalByUid($_G['uid']));
+
+			$medalShowLimit = $cvars['showMedalLimit'][$_G['groupid']];
+			if($medalShowLimit > 0){
+				$usermedalArr = getMedalByUid($_G['uid'], true);
+				$count = 0;
+				foreach($usermedalArr as $medalid => $expiration) if( $medal['expiration'] >= 0) $count++;
+				if($count >= $medalShowLimit) $expiration = $expiration ? -$expiration : -1;
+			}
+			$medalid = $medalid.(empty($expiration) ? '' : '|'.$expiration);
+			$expiration = abs($expiration);
 			$medalnew = $usermedal ? $usermedal."\t".$medalid : $medalid;
 			DB::query("UPDATE ".DB::table('common_member_field_forum')." SET medals='$medalnew' WHERE uid='$_G[uid]'");
 			foreach(getMedalExtendClass() as $classname => $newclass){
 				if(method_exists($newclass, 'memcp_get_succeed')) $newclass->memcp_get_succeed($medalfieldSetting[$classname]);
 			}
 			$medalmessage = 'medal_get_succeed';
+			//$medal['type'] = 1;
 		} else {
-			foreach(getMedalExtendClass() as $classname => $newclass){
+			//foreach(getMedalExtendClass() as $classname => $newclass){
 			//	if(method_exists($newclass, 'memcp_apply_succeed')) $newclass->memcp_apply_succeed($medalfieldSetting[$classname]);
-			}
+			//}
 			$medalmessage = 'medal_apply_succeed';
+			manage_addnotify('verifymedal');
 		}
-		$expiration = empty($medal['expiration'])? 0 : TIMESTAMP + $medal['expiration'] * 86400;
 		DB::query("INSERT INTO ".DB::table('forum_medallog')." (uid, medalid, type, dateline, expiration, status) VALUES ('$_G[uid]', '$medalid', '$medal[type]', '$_G[timestamp]', '$expiration', '0')");
+		//echo "INSERT INTO ".DB::table('forum_medallog')." (uid, medalid, type, dateline, expiration, status) VALUES ('$_G[uid]', '$medalid', '$medal[type]', '$_G[timestamp]', '$expiration', '0')";die;
 		showmessage($medalmessage, $thisurl, array('medalname' => $medal['name']));
 	}else{
 		showmessage("对不起，由于您尚未满足申请条件，申请失败！请返回。");
