@@ -12,9 +12,11 @@ class script_usergroup {
 	var $copyright = '<a href="www.jhdxr.com">江湖大虾仁@DSU</a>';
 	
 	function admincp_show_simple($setting){
-		global $_G, $lang;
+		global $_G, $lang, $medal;
+		$medal['permission'] = is_array($medal['permission']) ? $medal['permission'] : unserialize($medal['permission']);
+		$medal['usergroups'] = (array)$medal['permission']['usergroups'];
 		$var = array();
-		$var['value'] = $setting['usergroup'];
+		$var['value'] = $medal['usergroups'] ? $medal['usergroups'] : $setting['usergroup'];
 		$query = DB::query("SELECT type, groupid, grouptitle, radminid FROM ".DB::table('common_usergroup')." ORDER BY (creditshigher<>'0' || creditslower<>'0'), creditslower, groupid");
 		$groupselect = array();
 		while($group = DB::fetch($query)) {
@@ -30,10 +32,17 @@ class script_usergroup {
 		showsetting('用户组', '', '', $var['type'], '', '', '允许领取勋章的用户组，留空代表不限制');
 	}
 	
-	function admincp_save(){
-		global $_G;
+	function admincp_check(){
+		global $_G, $formulapermary;
 		$usergroup = &$_G['gp_usergroup'];
 		if(in_array('', $usergroup)) $usergroup = array();
+		
+		//$formulapermary['usergroupallow'] = empty($usergroup);
+		$formulapermary['usergroups'] = (array)$_G['gp_usergroup'];
+	}
+	
+	function admincp_save(){
+		global $_G;
 		return array('usergroup' => $_G['gp_usergroup']);
 	}
 	

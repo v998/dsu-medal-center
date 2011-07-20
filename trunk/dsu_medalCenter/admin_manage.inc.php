@@ -152,6 +152,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 			DB::insert('forum_medal', array('type' => $_G['gp_typenew']));
 			$medalid = DB::insert_id();
 		}
+		$formulapermary = array();
 
 		foreach(getMedalExtendClass() as $classname => $newclass){ //扩展：检查提交信息
 			if(method_exists($newclass, 'admincp_check')) $newclass->admincp_check();
@@ -173,7 +174,7 @@ if(empty($_G['gp_pdo']) || $_G['gp_pdo'] == 'list'){ //列表页面
 			'type' => $_G['gp_typenew'],
 			'description' => dhtmlspecialchars($_G['gp_descriptionnew']),
 			'expiration' => intval($_G['gp_expirationnew']),
-			'permission' => $formulapermnew,
+			'permission' => addslashes(serialize($formulapermary)),
 			'image' => $_G['gp_imagenew'],
 		), "medalid='$medalid'");
 

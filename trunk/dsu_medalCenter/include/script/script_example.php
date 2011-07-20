@@ -92,13 +92,14 @@ class script_example{
 	
 	/**
 	 * 在扩展脚本升级时会自动调用此方法。
+	 * @param <string> $nowVer 当前安装的版本号
 	 * @return <mixed>
 	 *	返回FALSE代表升级失败
 	 *	返回TRUE代表升级成功（默认，当返回值非布尔型或数组时，或无返回值时视为升级成功）
 	 *	若要同时自定义升级后显示的信息，请返回一个数组，格式为array(升级是否成功, 提示信息)。 e.g. return array(false, '扩展与配套插件版本不匹配，请先更新插件');
 	 *	注意：考虑到后续扩展性，返回值请设定为TRUE/FALSE/NULL(如无返回值推荐不要实现此方法)/数组
 	 */
-	function upgrade(){
+	function upgrade($nowVer){
 		return array(false, '示例程序仅供开发者参考，请勿用于生产环境！');
 	}
 	
