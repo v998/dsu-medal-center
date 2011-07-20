@@ -13,7 +13,7 @@ class script_dzperm{
 	
 	function admincp_show(){
 		global $_G, $lang, $medal;
-		$medal['permission'] = unserialize($medal['permission']);
+		$medal['permission'] = is_array($medal['permission']) ? $medal['permission'] : unserialize($medal['permission']);
 		$medal['permission'] = $medal['permission'][0];
 		showtableheader('medals_perm', 'notop');
 		$formulareplace .= '\'<u>'.$lang['setting_credits_formula_digestposts'].'</u>\',\'<u>'.$lang['setting_credits_formula_posts'].'</u>\',\'<u>'.$lang['setting_credits_formula_oltime'].'</u>\',\'<u>'.$lang['setting_credits_formula_pageviews'].'</u>\'';
@@ -101,14 +101,13 @@ class script_dzperm{
 	}
 	
 	function admincp_check(){
-		global $_G, $formulapermnew, $formulapermary;
+		global $_G, $formulapermary;
 		if(!checkformulaperm($_G['gp_formulapermnew'])) {
 			cpmsg('forums_formulaperm_error', '', 'error');
 		}
 		
 		$formulapermary[0] = $_G['gp_formulapermnew'];
 		$formulapermary[1] = preg_replace("/(digestposts|posts|threads|oltime|extcredits[1-8])/", "getuserprofile('\\1')", $_G['gp_formulapermnew']);
-		$formulapermnew = addslashes(serialize($formulapermary));
 	}
 	
 	function memcp_check(){

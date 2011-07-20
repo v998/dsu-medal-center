@@ -29,8 +29,8 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 	$return = TRUE;
 	switch($_G['gp_pdo']){
 		case 'install':
-			$modlist[$classname] = $newclass->version;
 			if(method_exists($newclass, 'install')) $return = $newclass->install();
+			$modlist[$classname] = $newclass->version;
 			$msg = 'Ö¸¶¨À©Õ¹°²×°³É¹¦£¡';
 			break;
 		case 'uninstall':
@@ -39,8 +39,8 @@ if(in_array($_G['gp_pdo'], array('install', 'upgrade', 'uninstall'))){ //½Å±¾²Ù×
 			$msg = 'Ö¸¶¨À©Õ¹Ð¶ÔØ³É¹¦£¡';
 			break;
 		case 'upgrade':
+			if(method_exists($newclass, 'upgrade')) $return = $newclass->upgrade($modlist[$classname]);
 			$modlist[$classname] = $newclass->version;
-			if(method_exists($newclass, 'upgrade')) $return = $newclass->upgrade();
 			$msg = 'Ö¸¶¨À©Õ¹Éý¼¶³É¹¦£¡';
 			break;
 	}
