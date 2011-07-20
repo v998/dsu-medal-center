@@ -8,7 +8,7 @@
 class script_market{
 
 	var $name = '»ý·Ö¹ºÂòÄ£¿é';
-	var $version = '1.0';
+	var $version = '1.1';
 	var $copyright = '<a href="www.dsu.cc">DSU Team</a>';
 	var $introduction = '';
 	
@@ -84,7 +84,7 @@ class script_market{
 		}else{
 			unset($_G['member']['extcredits'.$creditid]);
 			getuserprofile('extcredits'.$creditid);
-			return $value >0 && $_G['member']['extcredits'.$creditid] >= $value;
+			return $value ==0 || $_G['member']['extcredits'.$creditid] >= $value;
 		}
 	}
 	
