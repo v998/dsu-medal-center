@@ -93,4 +93,15 @@ function dsuMedal_phraseConfig(){
 	$cvars['showMedalLimit'] = (array) unserialize($cvars['showMedalLimit']);
 	return $cvars;
 }
+
+/**
+ * 检查指定插件是否已经安装
+ * @param <string> 插件的identifier
+ * @return <bool>指定插件是否已经安装
+ */
+function dsuMedal_pluginExists($identifier){
+	$identifier = addslashes($identifier);
+	$plugin = DB::fetch_first("SELECT * FROM ".DB::table('common_plugin')." WHERE identifier = '$identifier'");
+	return !empty($plugin);
+}
 ?>
