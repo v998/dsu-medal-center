@@ -97,7 +97,7 @@ class script_amupper{
 	function memcp_check($setting){
 		global $_G;
 		$_check = $this->_memcp_check($setting);
-		$return = ($_check == 3 ? '1' : '0');
+		$return = ($_check == 3 ? TRUE : FALSE);
 		return $return;
 	}
 
@@ -118,7 +118,10 @@ class script_amupper{
 	/**
 	 * 在扩展脚本安装时会自动调用此方法。
 	 */
-	function install(){}
+	function install(){
+		if(!dsuMedal_pluginExists('dsu_amupper'))
+			return array(FALSE, '请安装打卡机后再安装此模块！');
+	}
 	
 	/**
 	 * 在扩展脚本升级时会自动调用此方法。

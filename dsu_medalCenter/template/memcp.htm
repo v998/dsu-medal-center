@@ -131,7 +131,7 @@
 					</script>
 					<div class="tbmu mbw cl"><span class="y xg1 xw0">拥有勋章 $num 枚，当前显示{$medalShowCount}枚</span><h3>我的勋章</h3>
 						<p>(点击勋章可以设置在帖子中是否显示相应勋章，勋章名黑色代表显示，灰色代表隐藏)</p>
-						<p>(您最多可以设置显示{$medalShowLimit}枚勋章，如果设置数量多余{$medalShowLimit}枚系统将自动隐藏部分勋章)</p>
+						 <!--{if $medalShowLimit}--><p>(您最多可以设置显示{$medalShowLimit}枚勋章，如果设置数量多余{$medalShowLimit}枚系统将自动隐藏部分勋章)</p><!--{/if}--> 
 					</div>
 					<ul class="ml mlm mdl mdlow cl">
 						<!--{loop $mymedals $mymedal}-->

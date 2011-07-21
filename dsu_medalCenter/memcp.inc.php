@@ -61,7 +61,7 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 	}
 }else if($_G['gp_action'] == 'mymedal'){
 	$thisurl .= '&action=mymedal';
-	$medalShowLimit = $cvars['showMedalLimit'][$_G['groupid']];
+	$medalShowLimit = intval($cvars['showMedalLimit'][$_G['groupid']]);
 	$usermedalArr = getMedalByUid($_G['uid'], true);
 
 	$mymedals = array();
@@ -126,21 +126,23 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 		showmessage('medal_apply_invalid');
 	}
 	//检查是否已经领取过此勋章
-	$query = DB::query("SELECT medalid,type FROM ".DB::table('forum_medallog')." WHERE uid='$_G[uid]' AND medalid='$medalid' ORDER BY dateline");
-	//$medaldetail = DB::fetch_first("SELECT medalid FROM ".DB::table('forum_medallog')." WHERE uid='$_G[uid]' AND medalid='$medalid' AND type<'3'");
-	while($medaldetails = DB::fetch($query)){
-		$medaldetail = $medaldetails;
-	}
-	if($medaldetail['type'] == 1 || $medaldetail['type'] == 2) {
+	$usermedalArr = getMedalByUid($_G['uid'], true);
+	if(isset($usermedalArr[$medalid]) && (abs($usermedalArr[$medalid]) <= 1 || abs($usermedalArr[$medalid]) >= TIMESTAMP)){ //如果当前用户勋章中有此勋章
 		showmessage('medal_apply_existence', $thisurl);
+	}else{ //检查是否有尝试申请此勋章
+		//$query = DB::query("SELECT medalid,type FROM ".DB::table('forum_medallog')." WHERE uid='$_G[uid]' AND medalid='$medalid' ORDER BY dateline");
+		$medaldetail = DB::fetch_first("SELECT medalid FROM ".DB::table('forum_medallog')." WHERE uid='$_G[uid]' AND medalid='$medalid' AND type = 2");
+		if($medaldetail['medalid']) showmessage('medal_apply_existence', $thisurl);
 	}
+
 	
 	$applysucceed = TRUE;
 	$medalfieldSetting = (array)unserialize($medal['setting']);
 	foreach(getMedalExtendClass() as $classname => $newclass){
 		if($applysucceed && method_exists($newclass, 'memcp_check')) $applysucceed = $newclass->memcp_check($medalfieldSetting[$classname]);
+		list($applysucceed, $msg) = is_array($applysucceed) ? $applysucceed : array($applysucceed);
 		if($applysucceed !== TRUE){
-			$msg = $applysucceed === FALSE ? "对不起，由于您尚未满足申请条件，申请失败！请返回。" : $applysucceed;
+			$msg = empty($msg) ? "对不起，由于您尚未满足申请条件，申请失败！请返回。" : $msg;
 			showmessage($msg);
 		}
 	}
@@ -150,14 +152,13 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 			$usermedal = implode("\t", getMedalByUid($_G['uid']));
 
 			$medalShowLimit = $cvars['showMedalLimit'][$_G['groupid']];
-			if($medalShowLimit > 0){
-				$usermedalArr = getMedalByUid($_G['uid'], true);
+			if($medalShowLimit > 0){ //如果限制勋章展示总数
 				$count = 0;
-				foreach($usermedalArr as $medalid => $expiration) if( $medal['expiration'] >= 0) $count++;
-				if($count >= $medalShowLimit) $expiration = $expiration ? -$expiration : -1;
+				foreach($usermedalArr as $_medalid => $_expiration) if( $_expiration >= 0) $count++; //统计显示的勋章数量
+				if($count >= $medalShowLimit) $expiration = $expiration ? -$expiration : -1; //则新勋章默认不显示
 			}
 			$medalid = $medalid.(empty($expiration) ? '' : '|'.$expiration);
-			$expiration = abs($expiration);
+			$expiration = abs($expiration) > 1 ? abs($expiration) : 0;
 			$medalnew = $usermedal ? $usermedal."\t".$medalid : $medalid;
 			DB::query("UPDATE ".DB::table('common_member_field_forum')." SET medals='$medalnew' WHERE uid='$_G[uid]'");
 			foreach(getMedalExtendClass() as $classname => $newclass){
@@ -173,7 +174,6 @@ if(empty($_G['gp_action']) || $_G['gp_action'] == 'list'){
 			manage_addnotify('verifymedal');
 		}
 		DB::query("INSERT INTO ".DB::table('forum_medallog')." (uid, medalid, type, dateline, expiration, status) VALUES ('$_G[uid]', '$medalid', '$medal[type]', '$_G[timestamp]', '$expiration', '0')");
-		//echo "INSERT INTO ".DB::table('forum_medallog')." (uid, medalid, type, dateline, expiration, status) VALUES ('$_G[uid]', '$medalid', '$medal[type]', '$_G[timestamp]', '$expiration', '0')";die;
 		showmessage($medalmessage, $thisurl, array('medalname' => $medal['name']));
 	}else{
 		showmessage("对不起，由于您尚未满足申请条件，申请失败！请返回。");

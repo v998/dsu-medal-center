@@ -5,7 +5,7 @@
 
 	$Id$
 */
-class script_amupper{
+class script_paulsign{
 	
 	var $name = '[DSU]每日签到扩展模块'; //扩展脚本名
 	var $version = '1.0'; //扩展脚本版本号
@@ -97,7 +97,7 @@ class script_amupper{
 	function memcp_check($setting){
 		global $_G;
 		$_check = $this->_memcp_check($setting);
-		$return = ($_check == 3 ? '1' : '0');
+		$return = ($_check == 3 ? TRUE : FALSE);
 		return $return;
 	}
 
@@ -110,23 +110,5 @@ class script_amupper{
 		return $return;
 	}
 
-	function memcp_get_succeed($setting){
-		return;
-	}
-	
-	/**
-	 * 在扩展脚本安装时会自动调用此方法。
-	 */
-	function install(){}
-	
-	/**
-	 * 在扩展脚本升级时会自动调用此方法。
-	 */
-	function upgrade(){}
-	
-	/**
-	 * 在扩展脚本卸载时会自动调用此方法。
-	 */
-	function uninstall(){}
 }
 ?>
