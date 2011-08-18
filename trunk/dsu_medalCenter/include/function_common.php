@@ -49,7 +49,7 @@ function dsuMedal_saveOption($name, $data, $script = ''){
  */
 function dsuMedal_getOption($name, $script = ''){
 	$name = 'dsuMedal'.substr(md5($script.$name), 8, 16);
-	$option = DB::fetch_first("SELECT FROM ".DB::table('common_syscache')." WHERE cname='$name'");
+	$option = DB::fetch_first("SELECT * FROM ".DB::table('common_syscache')." WHERE cname='$name'");
 	if(empty($option)){
 		return NULL;
 	}else{
